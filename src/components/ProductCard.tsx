@@ -6,17 +6,26 @@ interface ProductCardProps {
   name: string;
   price: string;
   color: string;
+  tag?: string;
 }
 
-const ProductCard = ({ image, name, price, color }: ProductCardProps) => (
+const ProductCard = ({ image, name, price, color, tag }: ProductCardProps) => (
   <motion.div
-    whileHover={{ y: -6 }}
+    whileHover={{ y: -4 }}
     transition={{ duration: 0.3 }}
     className="group cursor-pointer"
   >
     <Link to="/checkout">
-      <div className="overflow-hidden bg-card shadow-warm">
-        <div className="aspect-[3/4] overflow-hidden">
+      <div className="border border-border bg-card overflow-hidden relative">
+        {/* Tag badge */}
+        {tag && (
+          <span className="absolute top-3 left-3 z-10 text-[10px] tracking-[0.15em] font-mono bg-primary text-primary-foreground px-3 py-1">
+            {tag}
+          </span>
+        )}
+
+        {/* Image */}
+        <div className="aspect-square overflow-hidden flex items-center justify-center bg-muted/30 p-6">
           <img
             src={image}
             alt={name}
@@ -24,10 +33,16 @@ const ProductCard = ({ image, name, price, color }: ProductCardProps) => (
             loading="lazy"
           />
         </div>
-        <div className="p-4">
-          <h3 className="font-display text-lg font-semibold text-foreground">{name}</h3>
-          <p className="text-xs font-mono text-muted-foreground tracking-wider mt-1">{color}</p>
-          <p className="text-sm font-mono text-primary font-bold mt-2">{price}</p>
+
+        {/* Info bar */}
+        <div className="border-t border-border px-4 py-4">
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="font-display text-lg font-semibold text-foreground">{name}</h3>
+              <p className="text-[10px] font-mono tracking-[0.2em] text-muted-foreground mt-1 uppercase">{color}</p>
+            </div>
+            <p className="text-xs font-mono text-foreground tracking-wider">{price}</p>
+          </div>
         </div>
       </div>
     </Link>
