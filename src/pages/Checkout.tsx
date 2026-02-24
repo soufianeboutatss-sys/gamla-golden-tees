@@ -96,8 +96,8 @@ const Checkout = () => {
               <div className="w-[448px] h-[448px] overflow-hidden bg-secondary">
                 <img src={selectedProduct.image} alt={t(selectedProduct.nameKey)} className="w-full h-full object-cover" />
               </div>
-              <p className="text-sm font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
-              <p className="text-sm font-mono text-muted-foreground">{selectedProduct.price}</p>
+              <p className="text-lg font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
+              <p className="text-lg font-mono text-muted-foreground">{selectedProduct.price}</p>
             </div>
           </div>
 
