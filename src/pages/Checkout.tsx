@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
+import ProductPreview from "@/components/ProductPreview";
 import { Upload, X, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -92,10 +93,13 @@ const Checkout = () => {
           {/* Product Summary */}
           <div className="pb-6">
             <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("yourProduct")}</p>
-            <div>
-              <div className="w-[448px] h-[448px] overflow-hidden bg-secondary">
-                <img src={selectedProduct.image} alt={t(selectedProduct.nameKey)} className="w-full h-full object-cover" />
-              </div>
+            <div className="max-w-[448px]">
+              <ProductPreview
+                productImage={selectedProduct.image}
+                productName={t(selectedProduct.nameKey)}
+                customText={form.customText}
+                logoPreview={logoPreview}
+              />
               <p className="text-xl font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
               <p className="text-xl font-mono text-muted-foreground">{selectedProduct.price}</p>
             </div>
