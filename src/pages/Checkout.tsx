@@ -1,8 +1,23 @@
 import { useState, useRef } from "react";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Upload, X } from "lucide-react";
+import { Upload, X, Check } from "lucide-react";
 import { toast } from "sonner";
+import hoodie1 from "@/assets/hoodie-1.jpg";
+import hoodie2 from "@/assets/hoodie-2.jpg";
+import hoodie3 from "@/assets/hoodie-3.jpg";
+import tshirt1 from "@/assets/tshirt-1.jpg";
+import tshirt2 from "@/assets/tshirt-2.jpg";
+import tshirt3 from "@/assets/tshirt-3.jpg";
+
+const products = [
+  { id: "classic-hoodie", image: hoodie1, name: "Classic Hoodie", price: "€49", category: "hoodie" },
+  { id: "urban-hoodie", image: hoodie2, name: "Urban Hoodie", price: "€49", category: "hoodie" },
+  { id: "forest-hoodie", image: hoodie3, name: "Forest Hoodie", price: "€49", category: "hoodie" },
+  { id: "essential-tee", image: tshirt1, name: "Essential Tee", price: "€29", category: "tshirt" },
+  { id: "statement-tee", image: tshirt2, name: "Statement Tee", price: "€29", category: "tshirt" },
+  { id: "sunset-tee", image: tshirt3, name: "Sunset Tee", price: "€29", category: "tshirt" },
+];
 
 const Checkout = () => {
   const [form, setForm] = useState({
@@ -10,7 +25,7 @@ const Checkout = () => {
     address: "",
     city: "",
     phone: "",
-    product: "hoodie",
+    selectedProduct: "",
     size: "M",
     color: "terracotta",
     customText: "",
@@ -49,12 +64,18 @@ const Checkout = () => {
       toast.error("Please fill in all required fields");
       return;
     }
+    if (!form.selectedProduct) {
+      toast.error("Please select a product");
+      return;
+    }
     if (!form.customText.trim() && !logoFile) {
       toast.error("Please add custom text or upload a logo");
       return;
     }
     toast.success("Order submitted! We'll contact you soon 🎉");
   };
+
+  const selectedProduct = products.find((p) => p.id === form.selectedProduct);
 
   const inputClass =
     "w-full px-4 py-3 text-sm font-mono bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground";
@@ -98,37 +119,68 @@ const Checkout = () => {
             <input name="city" value={form.city} onChange={handleChange} className={inputClass} placeholder="City" maxLength={100} />
           </div>
 
-          {/* Product options */}
+          {/* Product Selection */}
           <div className="border-t border-border pt-6">
-            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">PRODUCT</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className={labelClass}>TYPE</label>
-                <select name="product" value={form.product} onChange={handleChange} className={inputClass}>
-                  <option value="hoodie">Hoodie — €49</option>
-                  <option value="tshirt">T-Shirt — €29</option>
-                </select>
-              </div>
-              <div>
-                <label className={labelClass}>SIZE</label>
-                <select name="size" value={form.size} onChange={handleChange} className={inputClass}>
-                  {["XS", "S", "M", "L", "XL", "XXL"].map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className={labelClass}>COLOR</label>
-                <select name="color" value={form.color} onChange={handleChange} className={inputClass}>
-                  <option value="terracotta">Terracotta</option>
-                  <option value="navy">Navy</option>
-                  <option value="forest">Forest Green</option>
-                  <option value="black">Black</option>
-                  <option value="cream">Cream</option>
-                </select>
-              </div>
+            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">SELECT PRODUCT *</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {products.map((product) => (
+                <button
+                  key={product.id}
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, selectedProduct: product.id }))}
+                  className={`relative group text-left border transition-all ${
+                    form.selectedProduct === product.id
+                      ? "border-primary ring-1 ring-primary"
+                      : "border-border hover:border-muted-foreground"
+                  }`}
+                >
+                  <div className="aspect-square overflow-hidden bg-secondary">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-2.5">
+                    <p className="text-xs font-mono text-foreground truncate">{product.name}</p>
+                    <p className="text-xs font-mono text-muted-foreground">{product.price}</p>
+                  </div>
+                  {form.selectedProduct === product.id && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                      <Check size={12} className="text-primary-foreground" />
+                    </div>
+                  )}
+                </button>
+              ))}
             </div>
           </div>
+
+          {/* Size & Color */}
+          {selectedProduct && (
+            <div className="border-t border-border pt-6">
+              <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">OPTIONS</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>SIZE</label>
+                  <select name="size" value={form.size} onChange={handleChange} className={inputClass}>
+                    {["XS", "S", "M", "L", "XL", "XXL"].map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className={labelClass}>COLOR</label>
+                  <select name="color" value={form.color} onChange={handleChange} className={inputClass}>
+                    <option value="terracotta">Terracotta</option>
+                    <option value="navy">Navy</option>
+                    <option value="forest">Forest Green</option>
+                    <option value="black">Black</option>
+                    <option value="cream">Cream</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Customization */}
           <div className="border-t border-border pt-6">
