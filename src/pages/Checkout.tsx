@@ -59,8 +59,8 @@ const Checkout = () => {
     toast.success(t("orderSuccess"));
   };
 
-  const inputClass = "w-full px-4 py-3 text-sm font-mono bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground";
-  const labelClass = "block text-xs tracking-[0.15em] font-mono text-muted-foreground mb-2";
+  const inputClass = "w-full px-4 py-3 text-base font-mono bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground";
+  const labelClass = "block text-sm tracking-[0.15em] font-mono text-muted-foreground mb-2";
 
   if (!selectedProduct) {
     return (
@@ -83,21 +83,21 @@ const Checkout = () => {
           <Link to={selectedProduct.category === "hoodie" ? "/hoodies" : "/tshirts"} className="inline-flex items-center gap-2 text-xs font-mono text-muted-foreground hover:text-foreground mb-6 transition-colors">
             <ArrowLeft size={14} /> {t("backTo")}{selectedProduct.category === "hoodie" ? t("hoodies") : t("tshirts")}
           </Link>
-          <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-2">{t("checkout")}</p>
+          <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-2">{t("checkout")}</p>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-2">{t("placeOrder")}</h1>
-          <p className="text-sm font-mono text-muted-foreground leading-relaxed mb-12">{t("fillDetails")}</p>
+          <p className="text-base font-mono text-muted-foreground leading-relaxed mb-12">{t("fillDetails")}</p>
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Product Summary */}
           <div className="pb-6">
-            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("yourProduct")}</p>
+            <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("yourProduct")}</p>
             <div>
               <div className="w-[448px] h-[448px] overflow-hidden bg-secondary">
                 <img src={selectedProduct.image} alt={t(selectedProduct.nameKey)} className="w-full h-full object-cover" />
               </div>
-              <p className="text-lg font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
-              <p className="text-lg font-mono text-muted-foreground">{selectedProduct.price}</p>
+              <p className="text-xl font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
+              <p className="text-xl font-mono text-muted-foreground">{selectedProduct.price}</p>
             </div>
           </div>
 
@@ -122,7 +122,7 @@ const Checkout = () => {
 
           {/* Size & Color */}
           <div className="border-t border-border pt-6">
-            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("options")}</p>
+            <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("options")}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className={labelClass}>{t("size")}</label>
@@ -145,7 +145,7 @@ const Checkout = () => {
 
           {/* Customization */}
           <div className="border-t border-border pt-6">
-            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("customization")}</p>
+            <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("customization")}</p>
             <div>
               <label className={labelClass}>{t("customText")}</label>
               <textarea name="customText" value={form.customText} onChange={handleChange} className={`${inputClass} min-h-[100px] resize-y`} placeholder={t("customTextPlaceholder")} maxLength={200} />
@@ -166,7 +166,7 @@ const Checkout = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full py-4 text-xs tracking-[0.2em] font-mono bg-primary text-primary-foreground hover:bg-primary/90 transition-colors mt-8">
+          <button type="submit" className="w-full py-4 text-sm tracking-[0.2em] font-mono bg-primary text-primary-foreground hover:bg-primary/90 transition-colors mt-8">
             {t("submitOrder")}
           </button>
         </form>
