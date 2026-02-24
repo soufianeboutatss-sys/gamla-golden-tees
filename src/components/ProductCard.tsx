@@ -5,27 +5,27 @@ interface ProductCardProps {
   image: string;
   name: string;
   price: string;
-  color: string;
+  description: string;
   tag?: string;
 }
 
-const ProductCard = ({ image, name, price, color, tag }: ProductCardProps) => (
+const ProductCard = ({ image, name, price, description, tag }: ProductCardProps) => (
   <motion.div
     whileHover={{ y: -4 }}
     transition={{ duration: 0.3 }}
-    className="group cursor-pointer"
+    className="group cursor-pointer text-center"
   >
     <Link to="/checkout">
-      <div className="border border-border bg-card overflow-hidden relative">
+      <div className="relative">
         {/* Tag badge */}
         {tag && (
-          <span className="absolute top-3 left-3 z-10 text-[10px] tracking-[0.15em] font-mono bg-primary text-primary-foreground px-3 py-1">
+          <span className="absolute top-3 left-3 z-10 text-[10px] tracking-[0.12em] font-mono border border-primary text-primary px-3 py-1 rounded-full bg-background">
             {tag}
           </span>
         )}
 
         {/* Image */}
-        <div className="aspect-square overflow-hidden flex items-center justify-center bg-muted/30 p-6">
+        <div className="aspect-[3/4] overflow-hidden bg-secondary flex items-center justify-center mb-5">
           <img
             src={image}
             alt={name}
@@ -34,16 +34,10 @@ const ProductCard = ({ image, name, price, color, tag }: ProductCardProps) => (
           />
         </div>
 
-        {/* Info bar */}
-        <div className="border-t border-border px-4 py-4">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-display text-lg font-semibold text-foreground">{name}</h3>
-              <p className="text-[10px] font-mono tracking-[0.2em] text-muted-foreground mt-1 uppercase">{color}</p>
-            </div>
-            <p className="text-xs font-mono text-foreground tracking-wider">{price}</p>
-          </div>
-        </div>
+        {/* Info — centered like evervessel */}
+        <h3 className="text-[11px] font-mono tracking-[0.2em] uppercase text-foreground font-bold">{name}</h3>
+        <p className="text-base font-display text-foreground mt-1">{price}</p>
+        <p className="text-[11px] font-mono text-muted-foreground mt-1 leading-relaxed">{description}</p>
       </div>
     </Link>
   </motion.div>
