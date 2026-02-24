@@ -89,7 +89,21 @@ const Checkout = () => {
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Product Summary */}
+          <div className="pb-6">
+            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("yourProduct")}</p>
+            <div className="flex gap-4 items-center">
+              <div className="w-40 h-40 overflow-hidden bg-secondary flex-shrink-0">
+                <img src={selectedProduct.image} alt={t(selectedProduct.nameKey)} className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <p className="text-sm font-mono font-bold text-foreground">{t(selectedProduct.nameKey)}</p>
+                <p className="text-sm font-mono text-muted-foreground">{selectedProduct.price}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-border pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className={labelClass}>{t("fullName")}</label>
               <input name="name" value={form.name} onChange={handleChange} className={inputClass} placeholder="" maxLength={100} />
@@ -106,20 +120,6 @@ const Checkout = () => {
           <div>
             <label className={labelClass}>{t("city")}</label>
             <input name="city" value={form.city} onChange={handleChange} className={inputClass} placeholder="" maxLength={100} />
-          </div>
-
-          {/* Product Summary */}
-          <div className="border-t border-border pt-6">
-            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("yourProduct")}</p>
-            <div className="flex gap-4 items-center">
-              <div className="w-40 h-40 overflow-hidden bg-secondary flex-shrink-0">
-                <img src={selectedProduct.image} alt={t(selectedProduct.nameKey)} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <p className="text-sm font-mono font-bold text-foreground">{t(selectedProduct.nameKey)}</p>
-                <p className="text-sm font-mono text-muted-foreground">{selectedProduct.price}</p>
-              </div>
-            </div>
           </div>
 
           {/* Size & Color */}
