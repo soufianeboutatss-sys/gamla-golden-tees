@@ -1,18 +1,22 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingCart, ChevronDown, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { lang, setLang, t } = useLanguage();
+
+  const toggleLang = () => setLang(lang === "fr" ? "ar" : "fr");
 
   return (
     <>
       {/* Announcement bar */}
       <div className="bg-primary text-primary-foreground text-center py-2.5">
         <p className="text-[10px] tracking-[0.2em] font-mono uppercase">
-          Free shipping on orders over €100
+          {t("announcement")}
         </p>
       </div>
 
@@ -27,7 +31,7 @@ const Navbar = () => {
                 location.pathname === "/hoodies" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              HOODIES <ChevronDown size={12} />
+              {t("hoodies")} <ChevronDown size={12} />
             </Link>
             <Link
               to="/tshirts"
@@ -35,7 +39,7 @@ const Navbar = () => {
                 location.pathname === "/tshirts" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              T-SHIRTS <ChevronDown size={12} />
+              {t("tshirts")} <ChevronDown size={12} />
             </Link>
           </div>
 
@@ -55,10 +59,20 @@ const Navbar = () => {
 
           {/* Right utils */}
           <div className="flex items-center gap-5">
+            <button
+              onClick={toggleLang}
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Change language"
+            >
+              <Globe size={16} strokeWidth={1.5} />
+              <span className="text-[10px] tracking-[0.15em] font-mono font-bold">
+                {lang === "fr" ? "AR" : "FR"}
+              </span>
+            </button>
             <Link
               to="/checkout"
               className="text-foreground hover:text-muted-foreground transition-colors"
-              aria-label="Cart"
+              aria-label={t("cart")}
             >
               <ShoppingCart size={20} strokeWidth={1.5} />
             </Link>
@@ -75,10 +89,10 @@ const Navbar = () => {
             exit={{ opacity: 0, y: -10 }}
             className="fixed inset-x-0 top-[92px] z-40 bg-background border-b border-border py-8 flex flex-col items-center gap-6"
           >
-            <Link to="/" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">HOME</Link>
-            <Link to="/hoodies" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">HOODIES</Link>
-            <Link to="/tshirts" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">T-SHIRTS</Link>
-            <Link to="/checkout" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">ORDER</Link>
+            <Link to="/" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">{t("home")}</Link>
+            <Link to="/hoodies" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">{t("hoodies")}</Link>
+            <Link to="/tshirts" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">{t("tshirts")}</Link>
+            <Link to="/checkout" onClick={() => setMobileOpen(false)} className="text-[11px] tracking-[0.2em] font-mono text-muted-foreground hover:text-foreground">{t("order")}</Link>
           </motion.div>
         )}
       </AnimatePresence>
