@@ -6,9 +6,9 @@ import tshirt2 from "@/assets/tshirt-2.jpg";
 import tshirt3 from "@/assets/tshirt-3.jpg";
 
 const tshirts = [
-  { image: tshirt1, name: "Essential Tee", price: "€29", description: "100% Cotton • Custom Print", tag: "Classic" },
-  { image: tshirt2, name: "Statement Tee", price: "€29", description: "100% Cotton • Custom Print", tag: "Popular" },
-  { image: tshirt3, name: "Sunset Tee", price: "€29", description: "100% Cotton • Custom Print" },
+  { id: "essential-tee", image: tshirt1, name: "Essential Tee", price: "€29", description: "100% Cotton • Custom Print", tag: "Classic" },
+  { id: "statement-tee", image: tshirt2, name: "Statement Tee", price: "€29", description: "100% Cotton • Custom Print", tag: "Popular" },
+  { id: "sunset-tee", image: tshirt3, name: "Sunset Tee", price: "€29", description: "100% Cotton • Custom Print" },
 ];
 
 const Tshirts = () => (

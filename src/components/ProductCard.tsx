@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 interface ProductCardProps {
+  id?: string;
   image: string;
   name: string;
   price: string;
@@ -9,13 +10,13 @@ interface ProductCardProps {
   tag?: string;
 }
 
-const ProductCard = ({ image, name, price, description, tag }: ProductCardProps) => (
+const ProductCard = ({ id, image, name, price, description, tag }: ProductCardProps) => (
   <motion.div
     whileHover={{ y: -4 }}
     transition={{ duration: 0.3 }}
     className="group cursor-pointer text-center"
   >
-    <Link to="/checkout">
+    <Link to={`/checkout${id ? `?product=${id}` : ''}`}>
       <div className="relative">
         {/* Tag badge */}
         {tag && (

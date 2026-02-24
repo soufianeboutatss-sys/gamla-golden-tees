@@ -6,9 +6,9 @@ import hoodie2 from "@/assets/hoodie-2.jpg";
 import hoodie3 from "@/assets/hoodie-3.jpg";
 
 const hoodies = [
-  { image: hoodie1, name: "Classic Hoodie", price: "€49", description: "Premium Cotton • Custom Print", tag: "Bestseller" },
-  { image: hoodie2, name: "Urban Hoodie", price: "€49", description: "Premium Cotton • Custom Print", tag: "New" },
-  { image: hoodie3, name: "Forest Hoodie", price: "€49", description: "Premium Cotton • Custom Print" },
+  { id: "classic-hoodie", image: hoodie1, name: "Classic Hoodie", price: "€49", description: "Premium Cotton • Custom Print", tag: "Bestseller" },
+  { id: "urban-hoodie", image: hoodie2, name: "Urban Hoodie", price: "€49", description: "Premium Cotton • Custom Print", tag: "New" },
+  { id: "forest-hoodie", image: hoodie3, name: "Forest Hoodie", price: "€49", description: "Premium Cotton • Custom Print" },
 ];
 
 const Hoodies = () => (
