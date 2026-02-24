@@ -48,9 +48,9 @@ const Index = () => {
         <h2 className="font-display text-3xl md:text-4xl text-center text-foreground mb-4">Hoodies</h2>
         <p className="text-center text-xs font-mono text-muted-foreground mb-12 tracking-wider">CUSTOM PRINTED • PREMIUM QUALITY</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 max-w-5xl mx-auto">
-          <ProductCard image={hoodie1} name="Classic Hoodie" price="€49" description="Premium Cotton • Custom Print" tag="Bestseller" />
-          <ProductCard image={hoodie2} name="Urban Hoodie" price="€49" description="Premium Cotton • Custom Print" tag="New" />
-          <ProductCard image={hoodie3} name="Forest Hoodie" price="€49" description="Premium Cotton • Custom Print" />
+          <ProductCard id="classic-hoodie" image={hoodie1} name="Classic Hoodie" price="€49" description="Premium Cotton • Custom Print" tag="Bestseller" />
+          <ProductCard id="urban-hoodie" image={hoodie2} name="Urban Hoodie" price="€49" description="Premium Cotton • Custom Print" tag="New" />
+          <ProductCard id="forest-hoodie" image={hoodie3} name="Forest Hoodie" price="€49" description="Premium Cotton • Custom Print" />
         </div>
       </section>
 
@@ -59,9 +59,9 @@ const Index = () => {
         <h2 className="font-display text-3xl md:text-4xl text-center text-foreground mb-4">T-Shirts</h2>
         <p className="text-center text-xs font-mono text-muted-foreground mb-12 tracking-wider">YOUR DESIGN • YOUR RULES</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 max-w-5xl mx-auto">
-          <ProductCard image={tshirt1} name="Essential Tee" price="€29" description="100% Cotton • Custom Print" tag="Classic" />
-          <ProductCard image={tshirt2} name="Statement Tee" price="€29" description="100% Cotton • Custom Print" tag="Popular" />
-          <ProductCard image={tshirt3} name="Sunset Tee" price="€29" description="100% Cotton • Custom Print" />
+          <ProductCard id="essential-tee" image={tshirt1} name="Essential Tee" price="€29" description="100% Cotton • Custom Print" tag="Classic" />
+          <ProductCard id="statement-tee" image={tshirt2} name="Statement Tee" price="€29" description="100% Cotton • Custom Print" tag="Popular" />
+          <ProductCard id="sunset-tee" image={tshirt3} name="Sunset Tee" price="€29" description="100% Cotton • Custom Print" />
         </div>
       </section>
 

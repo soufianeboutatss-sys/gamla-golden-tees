@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
+import { useSearchParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Upload, X, Check } from "lucide-react";
+import { Upload, X, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import hoodie1 from "@/assets/hoodie-1.jpg";
 import hoodie2 from "@/assets/hoodie-2.jpg";
@@ -20,12 +21,15 @@ const products = [
 ];
 
 const Checkout = () => {
+  const [searchParams] = useSearchParams();
+  const productId = searchParams.get("product");
+  const selectedProduct = products.find((p) => p.id === productId);
+
   const [form, setForm] = useState({
     name: "",
     address: "",
     city: "",
     phone: "",
-    selectedProduct: "",
     size: "M",
     color: "terracotta",
     customText: "",
@@ -64,8 +68,8 @@ const Checkout = () => {
       toast.error("Please fill in all required fields");
       return;
     }
-    if (!form.selectedProduct) {
-      toast.error("Please select a product");
+    if (!selectedProduct) {
+      toast.error("No product selected");
       return;
     }
     if (!form.customText.trim() && !logoFile) {
@@ -75,11 +79,23 @@ const Checkout = () => {
     toast.success("Order submitted! We'll contact you soon 🎉");
   };
 
-  const selectedProduct = products.find((p) => p.id === form.selectedProduct);
-
   const inputClass =
     "w-full px-4 py-3 text-sm font-mono bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground";
   const labelClass = "block text-xs tracking-[0.15em] font-mono text-muted-foreground mb-2";
+
+  if (!selectedProduct) {
+    return (
+      <Layout>
+        <section className="container mx-auto px-6 py-16 max-w-2xl text-center">
+          <h1 className="font-display text-4xl font-bold text-foreground mb-4">No Product Selected</h1>
+          <p className="text-sm font-mono text-muted-foreground mb-8">Please choose a product first.</p>
+          <Link to="/hoodies" className="inline-flex items-center gap-2 text-sm font-mono text-primary hover:underline">
+            <ArrowLeft size={16} /> Browse Products
+          </Link>
+        </section>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -89,6 +105,9 @@ const Checkout = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
+          <Link to={selectedProduct.category === "hoodie" ? "/hoodies" : "/tshirts"} className="inline-flex items-center gap-2 text-xs font-mono text-muted-foreground hover:text-foreground mb-6 transition-colors">
+            <ArrowLeft size={14} /> Back to {selectedProduct.category === "hoodie" ? "Hoodies" : "T-Shirts"}
+          </Link>
           <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-2">CHECKOUT</p>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-2">
             Place Your Order
@@ -119,46 +138,23 @@ const Checkout = () => {
             <input name="city" value={form.city} onChange={handleChange} className={inputClass} placeholder="City" maxLength={100} />
           </div>
 
-          {/* Product Selection */}
+          {/* Selected Product Summary */}
           <div className="border-t border-border pt-6">
-            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">SELECT PRODUCT *</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {products.map((product) => (
-                <button
-                  key={product.id}
-                  type="button"
-                  onClick={() => setForm((prev) => ({ ...prev, selectedProduct: product.id }))}
-                  className={`relative group text-left border transition-all ${
-                    form.selectedProduct === product.id
-                      ? "border-primary ring-1 ring-primary"
-                      : "border-border hover:border-muted-foreground"
-                  }`}
-                >
-                  <div className="aspect-square overflow-hidden bg-secondary">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-2.5">
-                    <p className="text-xs font-mono text-foreground truncate">{product.name}</p>
-                    <p className="text-xs font-mono text-muted-foreground">{product.price}</p>
-                  </div>
-                  {form.selectedProduct === product.id && (
-                    <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                      <Check size={12} className="text-primary-foreground" />
-                    </div>
-                  )}
-                </button>
-              ))}
+            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">YOUR PRODUCT</p>
+            <div className="flex gap-4 items-center">
+              <div className="w-20 h-20 overflow-hidden bg-secondary flex-shrink-0">
+                <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <p className="text-sm font-mono font-bold text-foreground">{selectedProduct.name}</p>
+                <p className="text-sm font-mono text-muted-foreground">{selectedProduct.price}</p>
+              </div>
             </div>
           </div>
 
           {/* Size & Color */}
-          {selectedProduct && (
-            <div className="border-t border-border pt-6">
-              <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">OPTIONS</p>
+          <div className="border-t border-border pt-6">
+            <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">OPTIONS</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className={labelClass}>SIZE</label>
@@ -180,7 +176,6 @@ const Checkout = () => {
                 </div>
               </div>
             </div>
-          )}
 
           {/* Customization */}
           <div className="border-t border-border pt-6">
