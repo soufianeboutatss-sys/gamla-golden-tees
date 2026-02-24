@@ -4,54 +4,29 @@ import { motion } from "framer-motion";
 import tshirt1 from "@/assets/tshirt-1.jpg";
 import tshirt2 from "@/assets/tshirt-2.jpg";
 import tshirt3 from "@/assets/tshirt-3.jpg";
-import heroBanner from "@/assets/hero-banner.jpg";
 
 const tshirts = [
-  { image: tshirt1, name: "Essential Tee", price: "€29", color: "Cream", tag: "CLASSIC" },
-  { image: tshirt2, name: "Statement Tee", price: "€29", color: "Black", tag: "POPULAR" },
-  { image: tshirt3, name: "Sunset Tee", price: "€29", color: "Terracotta" },
+  { image: tshirt1, name: "Essential Tee", price: "€29", description: "100% Cotton • Custom Print", tag: "Classic" },
+  { image: tshirt2, name: "Statement Tee", price: "€29", description: "100% Cotton • Custom Print", tag: "Popular" },
+  { image: tshirt3, name: "Sunset Tee", price: "€29", description: "100% Cotton • Custom Print" },
 ];
 
 const Tshirts = () => (
   <Layout>
-    {/* Collection banner */}
-    <section className="relative h-[45vh] overflow-hidden -mt-[80px] flex items-end">
-      <img
-        src={heroBanner}
-        alt="T-shirts collection"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-foreground/40" />
-      <div className="relative z-10 px-8 md:px-16 pb-10 w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex items-end justify-between"
-        >
-          <div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold text-background">
-              Find Your Tee
-            </h1>
-            <p className="text-xs font-mono text-background/70 mt-2 max-w-sm leading-relaxed">
-              Premium custom t-shirts — your design, your rules.
-            </p>
-          </div>
-          <div className="hidden md:block text-right">
-            <p className="text-[10px] tracking-[0.2em] font-mono text-background/50">ALL T-SHIRTS ARE:</p>
-            <p className="text-[10px] tracking-[0.2em] font-mono text-background/50 mt-1">01</p>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-
-    {/* Product grid */}
-    <section className="px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <section className="px-6 lg:px-10 pt-16 pb-24">
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="font-display text-4xl md:text-5xl text-center text-foreground mb-3">All T-Shirts</h1>
+        <p className="text-center text-xs font-mono text-muted-foreground mb-16 tracking-wider">YOUR DESIGN • YOUR RULES</p>
+      </motion.div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 max-w-5xl mx-auto">
         {tshirts.map((t, i) => (
           <motion.div
             key={t.name}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
           >
