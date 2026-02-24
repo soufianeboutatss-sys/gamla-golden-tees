@@ -93,7 +93,7 @@ const Checkout = () => {
           <div className="pb-6">
             <p className="text-xs tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("yourProduct")}</p>
             <div className="flex gap-4 items-center">
-              <div className="w-56 h-56 overflow-hidden bg-secondary flex-shrink-0">
+              <div className="w-[448px] h-[448px] overflow-hidden bg-secondary flex-shrink-0">
                 <img src={selectedProduct.image} alt={t(selectedProduct.nameKey)} className="w-full h-full object-cover" />
               </div>
               <div>
