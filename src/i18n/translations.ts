@@ -87,6 +87,10 @@ export const translations = {
   addCustom: { fr: "Veuillez ajouter un texte ou télécharger un logo", ar: "يرجى إضافة نص أو تحميل شعار" },
   orderSuccess: { fr: "Commande envoyée ! Nous vous contacterons bientôt 🎉", ar: "تم إرسال الطلب! سنتواصل معك قريباً 🎉" },
   fileTooLarge: { fr: "Le fichier doit faire moins de 5 Mo", ar: "يجب أن يكون حجم الملف أقل من 5 ميجابايت" },
+  aiMagic: { fr: "✨ IA MAGIQUE", ar: "✨ سحر الذكاء" },
+  aiMagicGenerating: { fr: "Génération en cours...", ar: "جارٍ التوليد..." },
+  aiMagicError: { fr: "Erreur lors de la génération IA", ar: "خطأ أثناء التوليد بالذكاء" },
+  aiMagicHint: { fr: "Ajoutez du texte ou un logo puis cliquez sur IA Magique", ar: "أضف نصاً أو شعاراً ثم اضغط على سحر الذكاء" },
 
   // Footer
   copyright: { fr: "© 2026 GAMLA STAN", ar: "© 2026 GAMLA STAN" },
