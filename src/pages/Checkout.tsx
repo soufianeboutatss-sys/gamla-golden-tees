@@ -12,14 +12,20 @@ import hoodie3 from "@/assets/hoodie-3.jpg";
 import tshirt1 from "@/assets/tshirt-1.jpg";
 import tshirt2 from "@/assets/tshirt-2.jpg";
 import tshirt3 from "@/assets/tshirt-3.jpg";
+import hoodie1Alt from "@/assets/hoodie-1-alt.jpg";
+import hoodie2Alt from "@/assets/hoodie-2-alt.jpg";
+import hoodie3Alt from "@/assets/hoodie-3-alt.jpg";
+import tshirt1Alt from "@/assets/tshirt-1-alt.jpg";
+import tshirt2Alt from "@/assets/tshirt-2-alt.jpg";
+import tshirt3Alt from "@/assets/tshirt-3-alt.jpg";
 
 const productData = [
-  { id: "classic-hoodie", image: hoodie1, nameKey: "classicHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "urban-hoodie", image: hoodie2, nameKey: "urbanHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "forest-hoodie", image: hoodie3, nameKey: "forestHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "essential-tee", image: tshirt1, nameKey: "essentialTee" as const, price: "€29", category: "tshirt" },
-  { id: "statement-tee", image: tshirt2, nameKey: "statementTee" as const, price: "€29", category: "tshirt" },
-  { id: "sunset-tee", image: tshirt3, nameKey: "sunsetTee" as const, price: "€29", category: "tshirt" },
+  { id: "classic-hoodie", image: hoodie1, images: [hoodie1, hoodie1Alt], nameKey: "classicHoodie" as const, price: "€49", category: "hoodie" },
+  { id: "urban-hoodie", image: hoodie2, images: [hoodie2, hoodie2Alt], nameKey: "urbanHoodie" as const, price: "€49", category: "hoodie" },
+  { id: "forest-hoodie", image: hoodie3, images: [hoodie3, hoodie3Alt], nameKey: "forestHoodie" as const, price: "€49", category: "hoodie" },
+  { id: "essential-tee", image: tshirt1, images: [tshirt1, tshirt1Alt], nameKey: "essentialTee" as const, price: "€29", category: "tshirt" },
+  { id: "statement-tee", image: tshirt2, images: [tshirt2, tshirt2Alt], nameKey: "statementTee" as const, price: "€29", category: "tshirt" },
+  { id: "sunset-tee", image: tshirt3, images: [tshirt3, tshirt3Alt], nameKey: "sunsetTee" as const, price: "€29", category: "tshirt" },
 ];
 
 const Checkout = () => {
@@ -33,6 +39,7 @@ const Checkout = () => {
   });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -95,11 +102,26 @@ const Checkout = () => {
             <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("yourProduct")}</p>
             <div className="max-w-[448px]">
               <ProductPreview
-                productImage={selectedProduct.image}
+                productImage={selectedProduct.images[selectedImageIdx]}
                 productName={t(selectedProduct.nameKey)}
                 customText={form.customText}
                 logoPreview={logoPreview}
               />
+              {/* Thumbnail gallery */}
+              <div className="flex gap-2 mt-3">
+                {selectedProduct.images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setSelectedImageIdx(idx)}
+                    className={`w-16 h-16 border-2 overflow-hidden transition-colors ${
+                      idx === selectedImageIdx ? "border-primary" : "border-border hover:border-muted-foreground"
+                    }`}
+                  >
+                    <img src={img} alt={`${t(selectedProduct.nameKey)} vue ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
               <p className="text-xl font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
               <p className="text-xl font-mono text-muted-foreground">{selectedProduct.price}</p>
             </div>
