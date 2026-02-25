@@ -156,7 +156,7 @@ const Checkout = () => {
             </div>
             <div className="mt-4">
               <label className={labelClass}>{t("uploadLogo")}</label>
-              <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+              <input ref={fileRef} type="file" accept=".png,.svg,.webp" onChange={handleFileChange} className="hidden" />
               {logoPreview ? (
                 <div className="relative inline-block">
                   <img src={logoPreview} alt="Logo preview" className="h-32 object-contain border border-border p-2" />
