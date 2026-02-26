@@ -74,7 +74,7 @@ const Navbar = () => {
               className="text-foreground hover:text-muted-foreground transition-colors"
               aria-label={t("cart")}
             >
-              <ShoppingCart size={20} strokeWidth={1.5} />
+           
             </Link>
           </div>
         </nav>
