@@ -5,6 +5,8 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import tshirt1 from "@/assets/tshirt-1.jpg";
 import tshirt2 from "@/assets/tshirt-2.jpg";
 import tshirt3 from "@/assets/tshirt-3.jpg";
+import tshirt4 from "@/assets/tshirt-4.jpg";
+import tshirt5 from "@/assets/tshirt-5.jpg";
 
 const Tshirts = () => {
   const { t } = useLanguage();
@@ -13,6 +15,8 @@ const Tshirts = () => {
     { id: "essential-tee", image: tshirt1, name: t("essentialTee"), price: "€29", description: t("fullCotton"), tag: t("classic") },
     { id: "statement-tee", image: tshirt2, name: t("statementTee"), price: "€29", description: t("fullCotton"), tag: t("popular") },
     { id: "sunset-tee", image: tshirt3, name: t("sunsetTee"), price: "€29", description: t("fullCotton") },
+    { id: "burgundy-tee", image: tshirt4, name: t("burgundyTee"), price: "€29", description: t("fullCotton"), tag: t("limited") },
+    { id: "olive-tee", image: tshirt5, name: t("oliveTee"), price: "€29", description: t("fullCotton") },
   ];
 
   return (
