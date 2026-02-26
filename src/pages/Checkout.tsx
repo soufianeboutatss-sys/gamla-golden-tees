@@ -3,9 +3,10 @@ import { useSearchParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
 import ProductPreview from "@/components/ProductPreview";
-import { Upload, X, ArrowLeft } from "lucide-react";
+import { Upload, X, ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
 import hoodie1 from "@/assets/hoodie-1.jpg";
 import hoodie2 from "@/assets/hoodie-2.jpg";
 import hoodie3 from "@/assets/hoodie-3.jpg";
@@ -52,6 +53,8 @@ const Checkout = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
+  const [aiDesignImage, setAiDesignImage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -71,12 +74,37 @@ const Checkout = () => {
 
   const removeLogo = () => { setLogoFile(null); setLogoPreview(null); if (fileRef.current) fileRef.current.value = ""; };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.address.trim() || !form.city.trim() || !form.phone.trim()) { toast.error(t("fillRequired")); return; }
     if (!selectedProduct) { toast.error(t("noProductSelected")); return; }
     if (!form.customText.trim() && !logoFile) { toast.error(t("addCustom")); return; }
-    toast.success(t("orderSuccess"));
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.functions.invoke("send-order-to-sheets", {
+        body: {
+          productName: t(selectedProduct.nameKey),
+          price: selectedProduct.price,
+          size: form.size,
+          color: form.color,
+          customerName: form.name,
+          phone: form.phone,
+          address: form.address,
+          city: form.city,
+          customText: form.customText,
+          productImage: selectedProduct.images[selectedImageIdx],
+          aiDesignImage: aiDesignImage || null,
+        },
+      });
+      if (error) throw error;
+      toast.success(t("orderSuccess"));
+    } catch (err) {
+      console.error("Order submission error:", err);
+      toast.error(t("orderError"));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputClass = "w-full px-4 py-3 text-base font-mono bg-background border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors text-foreground placeholder:text-muted-foreground";
@@ -118,6 +146,7 @@ const Checkout = () => {
                 productName={t(selectedProduct.nameKey)}
                 customText={form.customText}
                 logoPreview={logoPreview}
+                onAiImageChange={setAiDesignImage}
               />
               {/* Thumbnail gallery */}
               <div className="flex gap-2 mt-3">
@@ -204,8 +233,8 @@ const Checkout = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full py-4 text-sm tracking-[0.2em] font-mono bg-primary text-primary-foreground hover:bg-primary/90 transition-colors mt-8">
-            {t("submitOrder")}
+          <button type="submit" disabled={isSubmitting} className="w-full py-4 text-sm tracking-[0.2em] font-mono bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60 transition-colors mt-8 flex items-center justify-center gap-2">
+            {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> {t("orderSending")}</> : t("submitOrder")}
           </button>
         </form>
       </section>

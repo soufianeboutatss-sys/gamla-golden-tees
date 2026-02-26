@@ -14,9 +14,10 @@ interface ProductPreviewProps {
   productName: string;
   customText: string;
   logoPreview: string | null;
+  onAiImageChange?: (image: string | null) => void;
 }
 
-const ProductPreview = ({ productImage, productName, customText, logoPreview }: ProductPreviewProps) => {
+const ProductPreview = ({ productImage, productName, customText, logoPreview, onAiImageChange }: ProductPreviewProps) => {
   const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [textPos, setTextPos] = useState<DraggableItem>({ x: 50, y: 50 });
@@ -87,6 +88,7 @@ const ProductPreview = ({ productImage, productName, customText, logoPreview }: 
       if (data?.error) throw new Error(data.error);
       if (data?.image) {
         setAiImage(data.image);
+        onAiImageChange?.(data.image);
       }
     } catch (err: any) {
       console.error("AI Magic error:", err);
@@ -182,7 +184,7 @@ const ProductPreview = ({ productImage, productName, customText, logoPreview }: 
       {aiImage && (
         <button
           type="button"
-          onClick={() => setAiImage(null)}
+          onClick={() => { setAiImage(null); onAiImageChange?.(null); }}
           className="w-full mt-1 py-2 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
         >
           ← Revenir à l'aperçu manuel
