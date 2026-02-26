@@ -92,6 +92,8 @@ export const translations = {
   noProductSelected: { fr: "Aucun produit sélectionné", ar: "لم يتم اختيار منتج" },
   addCustom: { fr: "Veuillez ajouter un texte ou télécharger un logo", ar: "يرجى إضافة نص أو تحميل شعار" },
   orderSuccess: { fr: "Commande envoyée ! Nous vous contacterons bientôt 🎉", ar: "تم إرسال الطلب! سنتواصل معك قريباً 🎉" },
+  orderSending: { fr: "Envoi de la commande...", ar: "جارٍ إرسال الطلب..." },
+  orderError: { fr: "Erreur lors de l'envoi de la commande. Réessayez.", ar: "خطأ أثناء إرسال الطلب. أعد المحاولة." },
   fileTooLarge: { fr: "Le fichier doit faire moins de 5 Mo", ar: "يجب أن يكون حجم الملف أقل من 5 ميجابايت" },
   aiMagic: { fr: "✨ IA MAGIQUE", ar: "✨ سحر الذكاء" },
   aiMagicGenerating: { fr: "Génération en cours...", ar: "جارٍ التوليد..." },
