@@ -70,8 +70,6 @@ const Navbar = () => {
               </span>
             </button>
          
-           
-            </Link>
           </div>
         </nav>
       </header>
