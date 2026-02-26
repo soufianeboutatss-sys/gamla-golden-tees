@@ -74,6 +74,22 @@ const Checkout = () => {
 
   const removeLogo = () => { setLogoFile(null); setLogoPreview(null); if (fileRef.current) fileRef.current.value = ""; };
 
+  const imageToBase64 = (src: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext("2d")!.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL("image/jpeg", 0.8));
+      };
+      img.onerror = reject;
+      img.src = src;
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.address.trim() || !form.city.trim() || !form.phone.trim()) { toast.error(t("fillRequired")); return; }
@@ -82,6 +98,9 @@ const Checkout = () => {
 
     setIsSubmitting(true);
     try {
+      // Convert product image to base64 so edge function can upload it
+      const productImageBase64 = await imageToBase64(selectedProduct.images[selectedImageIdx]);
+
       const { error } = await supabase.functions.invoke("send-order-to-sheets", {
         body: {
           productName: t(selectedProduct.nameKey),
@@ -93,7 +112,7 @@ const Checkout = () => {
           address: form.address,
           city: form.city,
           customText: form.customText,
-          productImage: selectedProduct.images[selectedImageIdx],
+          productImage: productImageBase64,
           aiDesignImage: aiDesignImage || null,
         },
       });
