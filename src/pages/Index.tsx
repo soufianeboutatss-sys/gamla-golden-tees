@@ -7,9 +7,13 @@ import heroBanner from "@/assets/hero-banner.jpg";
 import hoodie1 from "@/assets/hoodie-1.jpg";
 import hoodie2 from "@/assets/hoodie-2.jpg";
 import hoodie3 from "@/assets/hoodie-3.jpg";
+import hoodie4 from "@/assets/hoodie-4.jpg";
+import hoodie5 from "@/assets/hoodie-5.jpg";
 import tshirt1 from "@/assets/tshirt-1.jpg";
 import tshirt2 from "@/assets/tshirt-2.jpg";
 import tshirt3 from "@/assets/tshirt-3.jpg";
+import tshirt4 from "@/assets/tshirt-4.jpg";
+import tshirt5 from "@/assets/tshirt-5.jpg";
 
 const Index = () => {
   const { t } = useLanguage();
@@ -42,6 +46,8 @@ const Index = () => {
           <ProductCard id="classic-hoodie" image={hoodie1} name={t("classicHoodie")} price="€49" description={t("premiumCotton")} tag={t("bestseller")} />
           <ProductCard id="urban-hoodie" image={hoodie2} name={t("urbanHoodie")} price="€49" description={t("premiumCotton")} tag={t("new")} />
           <ProductCard id="forest-hoodie" image={hoodie3} name={t("forestHoodie")} price="€49" description={t("premiumCotton")} />
+          <ProductCard id="midnight-hoodie" image={hoodie4} name={t("midnightHoodie")} price="€49" description={t("premiumCotton")} tag={t("exclusive")} />
+          <ProductCard id="sand-hoodie" image={hoodie5} name={t("sandHoodie")} price="€49" description={t("premiumCotton")} />
         </div>
       </section>
 
@@ -53,6 +59,8 @@ const Index = () => {
           <ProductCard id="essential-tee" image={tshirt1} name={t("essentialTee")} price="€29" description={t("fullCotton")} tag={t("classic")} />
           <ProductCard id="statement-tee" image={tshirt2} name={t("statementTee")} price="€29" description={t("fullCotton")} tag={t("popular")} />
           <ProductCard id="sunset-tee" image={tshirt3} name={t("sunsetTee")} price="€29" description={t("fullCotton")} />
+          <ProductCard id="burgundy-tee" image={tshirt4} name={t("burgundyTee")} price="€29" description={t("fullCotton")} tag={t("limited")} />
+          <ProductCard id="olive-tee" image={tshirt5} name={t("oliveTee")} price="€29" description={t("fullCotton")} />
         </div>
       </section>
 

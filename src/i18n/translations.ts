@@ -50,6 +50,12 @@ export const translations = {
   essentialTee: { fr: "Tee Essentiel", ar: "تيشيرت أساسي" },
   statementTee: { fr: "Tee Statement", ar: "تيشيرت مميّز" },
   sunsetTee: { fr: "Tee Coucher de soleil", ar: "تيشيرت الغروب" },
+  midnightHoodie: { fr: "Sweat Midnight", ar: "سويتشيرت منتصف الليل" },
+  sandHoodie: { fr: "Sweat Sable", ar: "سويتشيرت رملي" },
+  burgundyTee: { fr: "Tee Bordeaux", ar: "تيشيرت بوردو" },
+  oliveTee: { fr: "Tee Olive", ar: "تيشيرت زيتوني" },
+  limited: { fr: "Édition limitée", ar: "إصدار محدود" },
+  exclusive: { fr: "Exclusif", ar: "حصري" },
 
   // Checkout
   checkout: { fr: "PAIEMENT", ar: "الدفع" },

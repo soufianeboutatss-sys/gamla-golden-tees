@@ -18,14 +18,26 @@ import hoodie3Alt from "@/assets/hoodie-3-alt.jpg";
 import tshirt1Alt from "@/assets/tshirt-1-alt.jpg";
 import tshirt2Alt from "@/assets/tshirt-2-alt.jpg";
 import tshirt3Alt from "@/assets/tshirt-3-alt.jpg";
+import hoodie4 from "@/assets/hoodie-4.jpg";
+import hoodie4Alt from "@/assets/hoodie-4-alt.jpg";
+import hoodie5 from "@/assets/hoodie-5.jpg";
+import hoodie5Alt from "@/assets/hoodie-5-alt.jpg";
+import tshirt4 from "@/assets/tshirt-4.jpg";
+import tshirt4Alt from "@/assets/tshirt-4-alt.jpg";
+import tshirt5 from "@/assets/tshirt-5.jpg";
+import tshirt5Alt from "@/assets/tshirt-5-alt.jpg";
 
 const productData = [
   { id: "classic-hoodie", image: hoodie1, images: [hoodie1, hoodie1Alt], nameKey: "classicHoodie" as const, price: "€49", category: "hoodie" },
   { id: "urban-hoodie", image: hoodie2, images: [hoodie2, hoodie2Alt], nameKey: "urbanHoodie" as const, price: "€49", category: "hoodie" },
   { id: "forest-hoodie", image: hoodie3, images: [hoodie3, hoodie3Alt], nameKey: "forestHoodie" as const, price: "€49", category: "hoodie" },
+  { id: "midnight-hoodie", image: hoodie4, images: [hoodie4, hoodie4Alt], nameKey: "midnightHoodie" as const, price: "€49", category: "hoodie" },
+  { id: "sand-hoodie", image: hoodie5, images: [hoodie5, hoodie5Alt], nameKey: "sandHoodie" as const, price: "€49", category: "hoodie" },
   { id: "essential-tee", image: tshirt1, images: [tshirt1, tshirt1Alt], nameKey: "essentialTee" as const, price: "€29", category: "tshirt" },
   { id: "statement-tee", image: tshirt2, images: [tshirt2, tshirt2Alt], nameKey: "statementTee" as const, price: "€29", category: "tshirt" },
   { id: "sunset-tee", image: tshirt3, images: [tshirt3, tshirt3Alt], nameKey: "sunsetTee" as const, price: "€29", category: "tshirt" },
+  { id: "burgundy-tee", image: tshirt4, images: [tshirt4, tshirt4Alt], nameKey: "burgundyTee" as const, price: "€29", category: "tshirt" },
+  { id: "olive-tee", image: tshirt5, images: [tshirt5, tshirt5Alt], nameKey: "oliveTee" as const, price: "€29", category: "tshirt" },
 ];
 
 const Checkout = () => {

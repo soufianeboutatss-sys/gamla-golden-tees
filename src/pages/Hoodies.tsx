@@ -5,6 +5,8 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import hoodie1 from "@/assets/hoodie-1.jpg";
 import hoodie2 from "@/assets/hoodie-2.jpg";
 import hoodie3 from "@/assets/hoodie-3.jpg";
+import hoodie4 from "@/assets/hoodie-4.jpg";
+import hoodie5 from "@/assets/hoodie-5.jpg";
 
 const Hoodies = () => {
   const { t } = useLanguage();
@@ -13,6 +15,8 @@ const Hoodies = () => {
     { id: "classic-hoodie", image: hoodie1, name: t("classicHoodie"), price: "€49", description: t("premiumCotton"), tag: t("bestseller") },
     { id: "urban-hoodie", image: hoodie2, name: t("urbanHoodie"), price: "€49", description: t("premiumCotton"), tag: t("new") },
     { id: "forest-hoodie", image: hoodie3, name: t("forestHoodie"), price: "€49", description: t("premiumCotton") },
+    { id: "midnight-hoodie", image: hoodie4, name: t("midnightHoodie"), price: "€49", description: t("premiumCotton"), tag: t("exclusive") },
+    { id: "sand-hoodie", image: hoodie5, name: t("sandHoodie"), price: "€49", description: t("premiumCotton") },
   ];
 
   return (
