@@ -69,11 +69,7 @@ const Navbar = () => {
                 {lang === "fr" ? "AR" : "FR"}
               </span>
             </button>
-            <Link
-              to="/checkout"
-              className="text-foreground hover:text-muted-foreground transition-colors"
-              aria-label={t("cart")}
-            >
+         
            
             </Link>
           </div>
