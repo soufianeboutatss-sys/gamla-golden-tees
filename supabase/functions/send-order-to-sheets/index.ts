@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -15,37 +16,69 @@ serve(async (req) => {
     const WEBHOOK_URL = Deno.env.get("GOOGLE_SHEETS_WEBHOOK_URL");
     if (!WEBHOOK_URL) throw new Error("GOOGLE_SHEETS_WEBHOOK_URL not configured");
 
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
     const body = await req.json();
     const {
-      productName,
-      price,
-      size,
-      color,
-      customerName,
-      phone,
-      address,
-      city,
-      customText,
-      productImage,
-      aiDesignImage,
+      productName, price, size, color,
+      customerName, phone, address, city,
+      customText, productImage, aiDesignImage,
     } = body;
+
+    const orderId = crypto.randomUUID();
+    let productImageUrl = productImage || "";
+    let aiDesignImageUrl = "";
+
+    // Upload AI design image (base64) to storage
+    if (aiDesignImage && aiDesignImage.startsWith("data:")) {
+      try {
+        const matches = aiDesignImage.match(/^data:image\/(\w+);base64,(.+)$/);
+        if (matches) {
+          const ext = matches[1] === "jpeg" ? "jpg" : matches[1];
+          const base64Data = matches[2];
+          const binaryData = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+          const filePath = `${orderId}/ai-design.${ext}`;
+
+          const { error: uploadErr } = await supabase.storage
+            .from("order-images")
+            .upload(filePath, binaryData, {
+              contentType: `image/${matches[1]}`,
+              upsert: true,
+            });
+
+          if (!uploadErr) {
+            const { data: urlData } = supabase.storage
+              .from("order-images")
+              .getPublicUrl(filePath);
+            aiDesignImageUrl = urlData.publicUrl;
+          } else {
+            console.error("AI image upload error:", uploadErr);
+          }
+        }
+      } catch (imgErr) {
+        console.error("AI image processing error:", imgErr);
+      }
+    }
+
+    // Upload product image if it's a base64 or blob URL won't work in sheets
+    // For local asset paths, construct the public app URL
+    if (productImage && !productImage.startsWith("http")) {
+      // It's a local asset path like /assets/hoodie-2-xxx.jpg - use the published app URL
+      productImageUrl = `https://gamla-golden-tees.lovable.app${productImage}`;
+    }
 
     // Send to Google Sheets webhook
     const response = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        productName,
-        price,
-        size,
-        color,
-        customerName,
-        phone,
-        address,
-        city,
+        productName, price, size, color,
+        customerName, phone, address, city,
         customText,
-        productImage: productImage || "",
-        aiDesignImage: aiDesignImage || "",
+        productImage: productImageUrl,
+        aiDesignImage: aiDesignImageUrl,
       }),
     });
 
