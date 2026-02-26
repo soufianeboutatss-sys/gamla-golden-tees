@@ -31,42 +31,41 @@ serve(async (req) => {
     let productImageUrl = productImage || "";
     let aiDesignImageUrl = "";
 
-    // Upload AI design image (base64) to storage
-    if (aiDesignImage && aiDesignImage.startsWith("data:")) {
-      try {
-        const matches = aiDesignImage.match(/^data:image\/(\w+);base64,(.+)$/);
-        if (matches) {
-          const ext = matches[1] === "jpeg" ? "jpg" : matches[1];
-          const base64Data = matches[2];
-          const binaryData = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
-          const filePath = `${orderId}/ai-design.${ext}`;
+    // Helper to upload base64 image to storage
+    const uploadBase64Image = async (base64: string, name: string): Promise<string> => {
+      const matches = base64.match(/^data:image\/(\w+);base64,(.+)$/);
+      if (!matches) return "";
+      const ext = matches[1] === "jpeg" ? "jpg" : matches[1];
+      const binaryData = Uint8Array.from(atob(matches[2]), (c) => c.charCodeAt(0));
+      const filePath = `${orderId}/${name}.${ext}`;
 
-          const { error: uploadErr } = await supabase.storage
-            .from("order-images")
-            .upload(filePath, binaryData, {
-              contentType: `image/${matches[1]}`,
-              upsert: true,
-            });
+      const { error: uploadErr } = await supabase.storage
+        .from("order-images")
+        .upload(filePath, binaryData, {
+          contentType: `image/${matches[1]}`,
+          upsert: true,
+        });
 
-          if (!uploadErr) {
-            const { data: urlData } = supabase.storage
-              .from("order-images")
-              .getPublicUrl(filePath);
-            aiDesignImageUrl = urlData.publicUrl;
-          } else {
-            console.error("AI image upload error:", uploadErr);
-          }
-        }
-      } catch (imgErr) {
-        console.error("AI image processing error:", imgErr);
+      if (uploadErr) {
+        console.error(`Upload error (${name}):`, uploadErr);
+        return "";
       }
+      const { data: urlData } = supabase.storage.from("order-images").getPublicUrl(filePath);
+      return urlData.publicUrl;
+    };
+
+    // Upload product image
+    if (productImage && productImage.startsWith("data:")) {
+      try {
+        productImageUrl = await uploadBase64Image(productImage, "product");
+      } catch (e) { console.error("Product image upload error:", e); }
     }
 
-    // Upload product image if it's a base64 or blob URL won't work in sheets
-    // For local asset paths, construct the public app URL
-    if (productImage && !productImage.startsWith("http")) {
-      // It's a local asset path like /assets/hoodie-2-xxx.jpg - use the published app URL
-      productImageUrl = `https://gamla-golden-tees.lovable.app${productImage}`;
+    // Upload AI design image
+    if (aiDesignImage && aiDesignImage.startsWith("data:")) {
+      try {
+        aiDesignImageUrl = await uploadBase64Image(aiDesignImage, "ai-design");
+      } catch (e) { console.error("AI image upload error:", e); }
     }
 
     // Send to Google Sheets webhook
