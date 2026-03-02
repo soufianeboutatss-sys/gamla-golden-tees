@@ -216,7 +216,7 @@ const Checkout = () => {
                   {["XS", "S", "M", "L", "XL", "XXL"].map((s) => (<option key={s} value={s}>{s}</option>))}
                 </select>
               </div>
-              <div style={{display:'none';}}>
+              <div style={{display:'none'}}>
                 <label className={labelClass}>{t("color")}</label>
                 <select name="color" value={form.color} onChange={handleChange} className={inputClass}>
                   <option value="terracotta">{t("terracotta")}</option>
