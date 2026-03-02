@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Menu, X, ShoppingCart, ChevronDown, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-import {logo} from './stock.png';
+import logo from './stock.png';
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
