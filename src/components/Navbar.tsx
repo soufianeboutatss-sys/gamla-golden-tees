@@ -21,7 +21,7 @@ const Navbar = () => {
       </div>
 
       {/* Main nav */}
-      <header className="sticky top-0 p-10 z-50 bg-background border-b border-border">
+      <header className="sticky top-0 p-5 z-50 bg-background border-b border-border">
         <nav className="flex items-center justify-between px-6 lg:px-10 py-4">
           {/* Left nav links */}
           <div className="hidden md:flex items-center gap-8">
