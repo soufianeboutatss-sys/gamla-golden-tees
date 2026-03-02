@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Menu, X, ShoppingCart, ChevronDown, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-
+import {logo} from './stock.png';
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -54,7 +54,7 @@ const Navbar = () => {
 
           {/* Center logo */}
           <Link to="/" className="absolute left-1/2 -translate-x-1/2 font-display text-2xl md:text-3xl font-bold tracking-wide text-foreground">
-            GAMLA<span className="italic font-normal">Stan</span>
+           <img src={logo}  />
           </Link>
 
           {/* Right utils */}
