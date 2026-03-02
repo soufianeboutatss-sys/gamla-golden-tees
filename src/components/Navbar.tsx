@@ -54,7 +54,7 @@ const Navbar = () => {
 
           {/* Center logo */}
           <Link to="/" className="absolute left-1/2 -translate-x-1/2 font-display text-2xl md:text-3xl font-bold tracking-wide text-foreground">
-           <img src={logo}  />
+           <img src={logo} width={100}  />
           </Link>
 
           {/* Right utils */}
