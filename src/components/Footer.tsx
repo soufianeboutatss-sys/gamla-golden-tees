@@ -5,7 +5,7 @@ const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="border-t border-border py-14 px-6 lg:px-10">
+    <footer className="border-t border-border py-14 px-6 lg:px-10 bg-gamla-red/5">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <Link to="/" className="font-display text-xl font-bold tracking-wide text-foreground">
          <img src={logo} width={100} />
