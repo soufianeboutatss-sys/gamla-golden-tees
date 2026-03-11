@@ -165,10 +165,10 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
           </div>
         )}
 
-        {/* Back placement indicator */}
-        {!aiImage && logoPreview && logoPlacement === "back" && (
+        {/* Back placement indicator when viewing front */}
+        {!aiImage && logoPreview && logoPlacement !== selectedSide && (
           <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded text-xs font-mono text-white">
-            Logo → Verso (dos)
+            Logo → {logoPlacement === "back" ? "Verso (dos)" : "Recto (devant)"}
           </div>
         )}
       </div>
