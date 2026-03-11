@@ -18,20 +18,45 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     // Build the prompt with exact user-specified parameters
-    let instruction = `You are a professional product mockup designer. Take this ${productName} product image and integrate the following customization directly onto the fabric/material of the garment in a photorealistic way, as if it was printed/embroidered on the product. The result should look like a real product photo from an e-commerce store. IMPORTANT: Respect the EXACT position, size, and color specified by the customer.`;
+    // Use a coordinate grid system to help the AI understand exact placement
+    let instruction = `You are a professional product mockup designer. Take this ${productName} product image and apply the following customizations EXACTLY as specified. The result must look like a real product photo.
+
+CRITICAL POSITIONING RULES:
+- The image uses a coordinate system where (0%, 0%) is the TOP-LEFT corner and (100%, 100%) is the BOTTOM-RIGHT corner.
+- 50% horizontally = center of the image.
+- 50% vertically = middle of the image.
+- You MUST place elements at the EXACT coordinates specified. Do NOT center them or move them to a "better" position.
+- Do NOT reinterpret or adjust the positions. Place them EXACTLY where specified.`;
 
     if (customText) {
-      const posDesc = textPosition ? `positioned at exactly ${Math.round(textPosition.x)}% from the left edge and ${Math.round(textPosition.y)}% from the top edge` : "centered on the front";
-      const sizeDesc = textSize ? ` The text should occupy approximately ${textSize}% of the garment width.` : "";
-      instruction += ` Print this text ${posDesc} of the garment: "${customText}" in ${textColor || "white"} color.${sizeDesc}`;
+      const xPos = textPosition ? Math.round(textPosition.x) : 50;
+      const yPos = textPosition ? Math.round(textPosition.y) : 50;
+      const sizeDesc = textSize ? ` The text width should be approximately ${textSize}% of the total image width.` : "";
+      instruction += `
+
+TEXT CUSTOMIZATION:
+- Text content: "${customText}"
+- Text color: ${textColor || "white"}
+- Horizontal position: ${xPos}% from the left edge (${xPos < 33 ? "LEFT side" : xPos > 66 ? "RIGHT side" : "CENTER"})
+- Vertical position: ${yPos}% from the top edge (${yPos < 33 ? "UPPER area" : yPos > 66 ? "LOWER area" : "MIDDLE area"})${sizeDesc}
+- Print this text directly on the fabric at this exact position.`;
     }
     if (logoBase64) {
       const placement = logoPlacement === "back" ? "on the back" : "on the front";
-      const posDesc = logoPosition && logoPlacement === "front" ? ` positioned at exactly ${Math.round(logoPosition.x)}% from the left edge and ${Math.round(logoPosition.y)}% from the top edge` : "";
-      const sizeDesc = logoSize ? ` The logo should occupy approximately ${logoSize}% of the garment width.` : "";
-      instruction += ` Also integrate the provided logo image ${placement}${posDesc} of the garment.${sizeDesc}`;
+      const xPos = logoPosition ? Math.round(logoPosition.x) : 50;
+      const yPos = logoPosition ? Math.round(logoPosition.y) : 30;
+      const sizeDesc = logoSize ? ` The logo width should be approximately ${logoSize}% of the total image width.` : "";
+      instruction += `
+
+LOGO CUSTOMIZATION:
+- Place the provided logo image ${placement} of the garment.
+- Horizontal position: ${xPos}% from the left edge (${xPos < 33 ? "LEFT side" : xPos > 66 ? "RIGHT side" : "CENTER"})
+- Vertical position: ${yPos}% from the top edge (${yPos < 33 ? "UPPER area" : yPos > 66 ? "LOWER area" : "MIDDLE area"})${sizeDesc}
+- Integrate the logo naturally into the fabric texture.`;
     }
-    instruction += ` Keep the same background, lighting, and product positioning. Make the customization look naturally part of the garment.`;
+    instruction += `
+
+FINAL RULES: Keep the exact same background, lighting, model pose, and product shape. Only add the customizations at their specified positions. Make them look printed/embroidered on the fabric.`;
 
     // Build messages with images
     const content: any[] = [{ type: "text", text: instruction }];
