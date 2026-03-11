@@ -20,7 +20,7 @@ interface ProductPreviewProps {
   onAiImageChange?: (image: string | null) => void;
 }
 
-const ProductPreview = ({ productImage, productName, customText, textColor = "#FFFFFF", logoPreview, logoPlacement = "front", onAiImageChange }: ProductPreviewProps) => {
+const ProductPreview = ({ productImage, productName, customText, textColor = "#FFFFFF", logoPreview, logoPlacement = "front", selectedSide = "front", onAiImageChange }: ProductPreviewProps) => {
   const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [textPos, setTextPos] = useState<DraggableItem>({ x: 50, y: 50 });
