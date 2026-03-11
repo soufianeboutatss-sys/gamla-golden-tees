@@ -43,11 +43,11 @@ const Index = () => {
         <h2 className="font-display text-3xl md:text-4xl text-center text-foreground mb-4">{t("hoodiesTitle")}</h2>
         <p className="text-center text-xs font-mono text-muted-foreground mb-12 tracking-wider">{t("hoodiesSub")}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 max-w-5xl mx-auto">
-          <ProductCard id="classic-hoodie" image={hoodie1} name={t("classicHoodie")} price="€49" description={t("premiumCotton")} tag={t("bestseller")} />
-          <ProductCard id="urban-hoodie" image={hoodie2} name={t("urbanHoodie")} price="€49" description={t("premiumCotton")} tag={t("new")} />
-          <ProductCard id="forest-hoodie" image={hoodie3} name={t("forestHoodie")} price="€49" description={t("premiumCotton")} />
-          <ProductCard id="midnight-hoodie" image={hoodie4} name={t("midnightHoodie")} price="€49" description={t("premiumCotton")} tag={t("exclusive")} />
-          <ProductCard id="sand-hoodie" image={hoodie5} name={t("sandHoodie")} price="€49" description={t("premiumCotton")} />
+          <ProductCard id="classic-hoodie" image={hoodie1} name={t("classicHoodie")} price="490 MAD" description={t("premiumCotton")} tag={t("bestseller")} />
+          <ProductCard id="urban-hoodie" image={hoodie2} name={t("urbanHoodie")} price="490 MAD" description={t("premiumCotton")} tag={t("new")} />
+          <ProductCard id="forest-hoodie" image={hoodie3} name={t("forestHoodie")} price="490 MAD" description={t("premiumCotton")} />
+          <ProductCard id="midnight-hoodie" image={hoodie4} name={t("midnightHoodie")} price="490 MAD" description={t("premiumCotton")} tag={t("exclusive")} />
+          <ProductCard id="sand-hoodie" image={hoodie5} name={t("sandHoodie")} price="490 MAD" description={t("premiumCotton")} />
         </div>
       </section>
 
@@ -56,11 +56,11 @@ const Index = () => {
         <h2 className="font-display text-3xl md:text-4xl text-center text-foreground mb-4">{t("tshirtsTitle")}</h2>
         <p className="text-center text-xs font-mono text-muted-foreground mb-12 tracking-wider">{t("tshirtsSub")}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 max-w-5xl mx-auto">
-          <ProductCard id="essential-tee" image={tshirt1} name={t("essentialTee")} price="€29" description={t("fullCotton")} tag={t("classic")} />
-          <ProductCard id="statement-tee" image={tshirt2} name={t("statementTee")} price="€29" description={t("fullCotton")} tag={t("popular")} />
-          <ProductCard id="sunset-tee" image={tshirt3} name={t("sunsetTee")} price="€29" description={t("fullCotton")} />
-          <ProductCard id="burgundy-tee" image={tshirt4} name={t("burgundyTee")} price="€29" description={t("fullCotton")} tag={t("limited")} />
-          <ProductCard id="olive-tee" image={tshirt5} name={t("oliveTee")} price="€29" description={t("fullCotton")} />
+          <ProductCard id="essential-tee" image={tshirt1} name={t("essentialTee")} price="290 MAD" description={t("fullCotton")} tag={t("classic")} />
+          <ProductCard id="statement-tee" image={tshirt2} name={t("statementTee")} price="290 MAD" description={t("fullCotton")} tag={t("popular")} />
+          <ProductCard id="sunset-tee" image={tshirt3} name={t("sunsetTee")} price="290 MAD" description={t("fullCotton")} />
+          <ProductCard id="burgundy-tee" image={tshirt4} name={t("burgundyTee")} price="290 MAD" description={t("fullCotton")} tag={t("limited")} />
+          <ProductCard id="olive-tee" image={tshirt5} name={t("oliveTee")} price="290 MAD" description={t("fullCotton")} />
         </div>
       </section>
 
