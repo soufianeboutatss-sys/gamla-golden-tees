@@ -70,10 +70,65 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
     });
   };
 
-  // Convert pixel size to a % of the container for AI prompt
-  const getRelativeSize = (px: number) => {
-    if (!containerRef.current) return 20;
-    return Math.round((px / containerRef.current.offsetWidth) * 100);
+  const loadImage = (src: string): Promise<HTMLImageElement> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  };
+
+  // Compose product + text + logo on a Canvas at exact positions, then send to AI
+  const createCompositeImage = async (): Promise<string> => {
+    const productImg = await loadImage(productImage);
+    const canvas = document.createElement("canvas");
+    const size = 1024; // square output
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d")!;
+
+    // Draw product image (cover fit)
+    const imgRatio = productImg.width / productImg.height;
+    let sx = 0, sy = 0, sw = productImg.width, sh = productImg.height;
+    if (imgRatio > 1) {
+      sx = (productImg.width - productImg.height) / 2;
+      sw = productImg.height;
+    } else {
+      sy = (productImg.height - productImg.width) / 2;
+      sh = productImg.width;
+    }
+    ctx.drawImage(productImg, sx, sy, sw, sh, 0, 0, size, size);
+
+    // Draw custom text at exact position
+    if (customText.trim()) {
+      const scaledFontSize = (textSize / (containerRef.current?.offsetWidth || 400)) * size;
+      ctx.font = `bold ${Math.round(scaledFontSize)}px monospace`;
+      ctx.fillStyle = textColor;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const tx = (textPos.x / 100) * size;
+      const ty = (textPos.y / 100) * size;
+      // Handle multi-line
+      const lines = customText.split("\n");
+      const lineHeight = scaledFontSize * 1.2;
+      const startY = ty - ((lines.length - 1) * lineHeight) / 2;
+      lines.forEach((line, i) => {
+        ctx.fillText(line, tx, startY + i * lineHeight, size * 0.8);
+      });
+    }
+
+    // Draw logo at exact position
+    if (logoPreview && logoPlacement === selectedSide) {
+      const logoImg = await loadImage(logoPreview);
+      const scaledLogoSize = (logoSize / (containerRef.current?.offsetWidth || 400)) * size;
+      const lx = (logoPos.x / 100) * size - scaledLogoSize / 2;
+      const ly = (logoPos.y / 100) * size - scaledLogoSize / 2;
+      ctx.drawImage(logoImg, lx, ly, scaledLogoSize, scaledLogoSize);
+    }
+
+    return canvas.toDataURL("image/jpeg", 0.9);
   };
 
   const handleAiMagic = async () => {
@@ -84,19 +139,12 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
 
     setIsGenerating(true);
     try {
-      const productImageBase64 = await imageToBase64(productImage);
+      // Create composite with exact positions using Canvas
+      const compositeBase64 = await createCompositeImage();
 
       const { data, error } = await supabase.functions.invoke("ai-magic-preview", {
         body: {
-          productImageBase64,
-          customText: customText.trim() || null,
-          textColor,
-          textSize: getRelativeSize(textSize),
-          logoBase64: logoPreview || null,
-          logoPlacement,
-          logoSize: getRelativeSize(logoSize),
-          textPosition: customText.trim() ? textPos : null,
-          logoPosition: logoPreview ? logoPos : null,
+          compositeImageBase64: compositeBase64,
           productName,
         },
       });
