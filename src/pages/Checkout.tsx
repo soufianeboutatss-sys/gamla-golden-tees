@@ -29,16 +29,16 @@ import tshirt5 from "@/assets/tshirt-5.jpg";
 import tshirt5Alt from "@/assets/tshirt-5-alt.jpg";
 
 const productData = [
-  { id: "classic-hoodie", image: hoodie1, images: [hoodie1, hoodie1Alt], nameKey: "classicHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "urban-hoodie", image: hoodie2, images: [hoodie2, hoodie2Alt], nameKey: "urbanHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "forest-hoodie", image: hoodie3, images: [hoodie3, hoodie3Alt], nameKey: "forestHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "midnight-hoodie", image: hoodie4, images: [hoodie4, hoodie4Alt], nameKey: "midnightHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "sand-hoodie", image: hoodie5, images: [hoodie5, hoodie5Alt], nameKey: "sandHoodie" as const, price: "€49", category: "hoodie" },
-  { id: "essential-tee", image: tshirt1, images: [tshirt1, tshirt1Alt], nameKey: "essentialTee" as const, price: "€29", category: "tshirt" },
-  { id: "statement-tee", image: tshirt2, images: [tshirt2, tshirt2Alt], nameKey: "statementTee" as const, price: "€29", category: "tshirt" },
-  { id: "sunset-tee", image: tshirt3, images: [tshirt3, tshirt3Alt], nameKey: "sunsetTee" as const, price: "€29", category: "tshirt" },
-  { id: "burgundy-tee", image: tshirt4, images: [tshirt4, tshirt4Alt], nameKey: "burgundyTee" as const, price: "€29", category: "tshirt" },
-  { id: "olive-tee", image: tshirt5, images: [tshirt5, tshirt5Alt], nameKey: "oliveTee" as const, price: "€29", category: "tshirt" },
+  { id: "classic-hoodie", image: hoodie1, images: [hoodie1, hoodie1Alt], nameKey: "classicHoodie" as const, price: "490 MAD", category: "hoodie" },
+  { id: "urban-hoodie", image: hoodie2, images: [hoodie2, hoodie2Alt], nameKey: "urbanHoodie" as const, price: "490 MAD", category: "hoodie" },
+  { id: "forest-hoodie", image: hoodie3, images: [hoodie3, hoodie3Alt], nameKey: "forestHoodie" as const, price: "490 MAD", category: "hoodie" },
+  { id: "midnight-hoodie", image: hoodie4, images: [hoodie4, hoodie4Alt], nameKey: "midnightHoodie" as const, price: "490 MAD", category: "hoodie" },
+  { id: "sand-hoodie", image: hoodie5, images: [hoodie5, hoodie5Alt], nameKey: "sandHoodie" as const, price: "490 MAD", category: "hoodie" },
+  { id: "essential-tee", image: tshirt1, images: [tshirt1, tshirt1Alt], nameKey: "essentialTee" as const, price: "290 MAD", category: "tshirt" },
+  { id: "statement-tee", image: tshirt2, images: [tshirt2, tshirt2Alt], nameKey: "statementTee" as const, price: "290 MAD", category: "tshirt" },
+  { id: "sunset-tee", image: tshirt3, images: [tshirt3, tshirt3Alt], nameKey: "sunsetTee" as const, price: "290 MAD", category: "tshirt" },
+  { id: "burgundy-tee", image: tshirt4, images: [tshirt4, tshirt4Alt], nameKey: "burgundyTee" as const, price: "290 MAD", category: "tshirt" },
+  { id: "olive-tee", image: tshirt5, images: [tshirt5, tshirt5Alt], nameKey: "oliveTee" as const, price: "290 MAD", category: "tshirt" },
 ];
 
 const Checkout = () => {

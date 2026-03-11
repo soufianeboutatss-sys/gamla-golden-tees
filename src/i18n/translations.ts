@@ -3,8 +3,8 @@ export type Lang = "fr" | "ar";
 export const translations = {
   // Navbar
   announcement: {
-    fr: "Livraison gratuite pour les commandes de plus de 100€",
-    ar: "شحن مجاني للطلبات التي تتجاوز 100€",
+    fr: "Livraison gratuite pour les commandes de plus de 1000 MAD",
+    ar: "شحن مجاني للطلبات التي تتجاوز 1000 MAD",
   },
   hoodies: { fr: "SWEATS", ar: "سويتشيرت" },
   tshirts: { fr: "T-SHIRTS", ar: "تيشيرتات" },

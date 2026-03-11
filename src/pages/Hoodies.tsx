@@ -12,11 +12,11 @@ const Hoodies = () => {
   const { t } = useLanguage();
 
   const hoodies = [
-    { id: "classic-hoodie", image: hoodie1, name: t("classicHoodie"), price: "€49", description: t("premiumCotton"), tag: t("bestseller") },
-    { id: "urban-hoodie", image: hoodie2, name: t("urbanHoodie"), price: "€49", description: t("premiumCotton"), tag: t("new") },
-    { id: "forest-hoodie", image: hoodie3, name: t("forestHoodie"), price: "€49", description: t("premiumCotton") },
-    { id: "midnight-hoodie", image: hoodie4, name: t("midnightHoodie"), price: "€49", description: t("premiumCotton"), tag: t("exclusive") },
-    { id: "sand-hoodie", image: hoodie5, name: t("sandHoodie"), price: "€49", description: t("premiumCotton") },
+    { id: "classic-hoodie", image: hoodie1, name: t("classicHoodie"), price: "490 MAD", description: t("premiumCotton"), tag: t("bestseller") },
+    { id: "urban-hoodie", image: hoodie2, name: t("urbanHoodie"), price: "490 MAD", description: t("premiumCotton"), tag: t("new") },
+    { id: "forest-hoodie", image: hoodie3, name: t("forestHoodie"), price: "490 MAD", description: t("premiumCotton") },
+    { id: "midnight-hoodie", image: hoodie4, name: t("midnightHoodie"), price: "490 MAD", description: t("premiumCotton"), tag: t("exclusive") },
+    { id: "sand-hoodie", image: hoodie5, name: t("sandHoodie"), price: "490 MAD", description: t("premiumCotton") },
   ];
 
   return (

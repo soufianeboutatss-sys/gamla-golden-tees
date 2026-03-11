@@ -12,11 +12,11 @@ const Tshirts = () => {
   const { t } = useLanguage();
 
   const tshirts = [
-    { id: "essential-tee", image: tshirt1, name: t("essentialTee"), price: "€29", description: t("fullCotton"), tag: t("classic") },
-    { id: "statement-tee", image: tshirt2, name: t("statementTee"), price: "€29", description: t("fullCotton"), tag: t("popular") },
-    { id: "sunset-tee", image: tshirt3, name: t("sunsetTee"), price: "€29", description: t("fullCotton") },
-    { id: "burgundy-tee", image: tshirt4, name: t("burgundyTee"), price: "€29", description: t("fullCotton"), tag: t("limited") },
-    { id: "olive-tee", image: tshirt5, name: t("oliveTee"), price: "€29", description: t("fullCotton") },
+    { id: "essential-tee", image: tshirt1, name: t("essentialTee"), price: "290 MAD", description: t("fullCotton"), tag: t("classic") },
+    { id: "statement-tee", image: tshirt2, name: t("statementTee"), price: "290 MAD", description: t("fullCotton"), tag: t("popular") },
+    { id: "sunset-tee", image: tshirt3, name: t("sunsetTee"), price: "290 MAD", description: t("fullCotton") },
+    { id: "burgundy-tee", image: tshirt4, name: t("burgundyTee"), price: "290 MAD", description: t("fullCotton"), tag: t("limited") },
+    { id: "olive-tee", image: tshirt5, name: t("oliveTee"), price: "290 MAD", description: t("fullCotton") },
   ];
 
   return (
