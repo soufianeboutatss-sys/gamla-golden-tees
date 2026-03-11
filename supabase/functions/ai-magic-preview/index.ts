@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { productImageBase64, customText, logoBase64, productName } = await req.json();
+    const { productImageBase64, customText, textColor, logoBase64, logoPlacement, textPosition, logoPosition, productName } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -21,10 +21,13 @@ serve(async (req) => {
     let instruction = `You are a professional product mockup designer. Take this ${productName} product image and integrate the following customization directly onto the fabric/material of the garment in a photorealistic way, as if it was printed/embroidered on the product. The result should look like a real product photo from an e-commerce store.`;
 
     if (customText) {
-      instruction += ` Print this text on the front/center of the garment: "${customText}".`;
+      const posDesc = textPosition ? `at approximately ${Math.round(textPosition.x)}% from left and ${Math.round(textPosition.y)}% from top` : "on the front/center";
+      instruction += ` Print this text ${posDesc} of the garment: "${customText}" in ${textColor || "white"} color.`;
     }
     if (logoBase64) {
-      instruction += ` Also integrate the provided logo image onto the garment, placing it prominently on the front.`;
+      const placement = logoPlacement === "back" ? "on the back" : "on the front";
+      const posDesc = logoPosition && logoPlacement === "front" ? ` at approximately ${Math.round(logoPosition.x)}% from left and ${Math.round(logoPosition.y)}% from top` : "";
+      instruction += ` Also integrate the provided logo image ${placement}${posDesc} of the garment.`;
     }
     instruction += ` Keep the same background, lighting, and product positioning. Make the customization look naturally part of the garment.`;
 
