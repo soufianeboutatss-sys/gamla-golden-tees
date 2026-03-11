@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Minus, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -28,6 +28,8 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
   const [dragging, setDragging] = useState<"text" | "logo" | null>(null);
   const [aiImage, setAiImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [textSize, setTextSize] = useState(16); // px
+  const [logoSize, setLogoSize] = useState(80); // px
 
   const getPercentPos = useCallback((clientX: number, clientY: number) => {
     if (!containerRef.current) return { x: 50, y: 50 };
@@ -68,6 +70,12 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
     });
   };
 
+  // Convert pixel size to a % of the container for AI prompt
+  const getRelativeSize = (px: number) => {
+    if (!containerRef.current) return 20;
+    return Math.round((px / containerRef.current.offsetWidth) * 100);
+  };
+
   const handleAiMagic = async () => {
     if (!hasContent) {
       toast.error(t("aiMagicHint"));
@@ -83,8 +91,10 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
           productImageBase64,
           customText: customText.trim() || null,
           textColor,
+          textSize: getRelativeSize(textSize),
           logoBase64: logoPreview || null,
           logoPlacement,
+          logoSize: getRelativeSize(logoSize),
           textPosition: customText.trim() ? textPos : null,
           logoPosition: logoPreview ? logoPos : null,
           productName,
@@ -105,7 +115,6 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
     }
   };
 
-  // Show logo on preview when current view matches the placement side
   const showLogoOnPreview = logoPreview && logoPlacement === selectedSide;
 
   return (
@@ -137,15 +146,15 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
             onPointerDown={(e) => handlePointerDown("text", e)}
           >
             <p
-              className="text-sm font-mono whitespace-pre-wrap break-words leading-tight font-bold"
-              style={{ color: textColor }}
+              className="font-mono whitespace-pre-wrap break-words leading-tight font-bold"
+              style={{ color: textColor, fontSize: `${textSize}px` }}
             >
               {customText}
             </p>
           </div>
         )}
 
-        {/* Logo overlay - only shown for front placement */}
+        {/* Logo overlay */}
         {!aiImage && showLogoOnPreview && (
           <div
             className={`absolute cursor-grab active:cursor-grabbing rounded bg-white/60 backdrop-blur-sm border border-border shadow-md p-1 ${dragging === "logo" ? "ring-2 ring-primary" : ""}`}
@@ -159,19 +168,69 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
             <img
               src={logoPreview}
               alt="Logo"
-              className="h-20 w-20 object-contain pointer-events-none"
+              style={{ height: `${logoSize}px`, width: `${logoSize}px` }}
+              className="object-contain pointer-events-none"
               draggable={false}
             />
           </div>
         )}
 
-        {/* Back placement indicator when viewing front */}
+        {/* Indicator when logo is on the other side */}
         {!aiImage && logoPreview && logoPlacement !== selectedSide && (
           <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded text-xs font-mono text-white">
-            Logo → {logoPlacement === "back" ? "Verso (dos)" : "Recto (devant)"}
+            Logo → {logoPlacement === "back" ? "Back" : "Front"}
           </div>
         )}
       </div>
+
+      {/* Size controls */}
+      {hasContent && !aiImage && (
+        <div className="mt-3 space-y-2">
+          {/* Text size control */}
+          {customText.trim() && (
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono text-muted-foreground w-24 shrink-0">{t("textSizeLabel")}</span>
+              <button type="button" onClick={() => setTextSize(Math.max(10, textSize - 2))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+                <Minus size={12} />
+              </button>
+              <input
+                type="range"
+                min={10}
+                max={40}
+                value={textSize}
+                onChange={(e) => setTextSize(Number(e.target.value))}
+                className="flex-1 accent-primary h-1"
+              />
+              <button type="button" onClick={() => setTextSize(Math.min(40, textSize + 2))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+                <Plus size={12} />
+              </button>
+              <span className="text-xs font-mono text-muted-foreground w-8 text-right">{textSize}px</span>
+            </div>
+          )}
+
+          {/* Logo size control */}
+          {showLogoOnPreview && (
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono text-muted-foreground w-24 shrink-0">{t("logoSizeLabel")}</span>
+              <button type="button" onClick={() => setLogoSize(Math.max(30, logoSize - 10))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+                <Minus size={12} />
+              </button>
+              <input
+                type="range"
+                min={30}
+                max={200}
+                value={logoSize}
+                onChange={(e) => setLogoSize(Number(e.target.value))}
+                className="flex-1 accent-primary h-1"
+              />
+              <button type="button" onClick={() => setLogoSize(Math.min(200, logoSize + 10))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+                <Plus size={12} />
+              </button>
+              <span className="text-xs font-mono text-muted-foreground w-8 text-right">{logoSize}px</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* AI Magic Button */}
       {hasContent && (
@@ -197,7 +256,7 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
 
       {hasContent && !aiImage && (
         <p className="text-xs font-mono text-muted-foreground mt-2 text-center italic">
-          ↕ ↔ Glissez pour repositionner
+          ↕ ↔ {t("dragToReposition")}
         </p>
       )}
 
@@ -207,7 +266,7 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
           onClick={() => { setAiImage(null); onAiImageChange?.(null); }}
           className="w-full mt-1 py-2 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Revenir à l'aperçu manuel
+          ← {t("backToManual")}
         </button>
       )}
     </div>
