@@ -105,8 +105,8 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
     }
   };
 
-  // Show logo on preview only if placement is "front"
-  const showLogoOnPreview = logoPreview && logoPlacement === "front";
+  // Show logo on preview when current view matches the placement side
+  const showLogoOnPreview = logoPreview && logoPlacement === selectedSide;
 
   return (
     <div className="relative">
