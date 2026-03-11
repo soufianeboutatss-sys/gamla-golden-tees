@@ -313,7 +313,11 @@ const Checkout = () => {
                     <button
                       key={side}
                       type="button"
-                      onClick={() => setLogoPlacement(side)}
+                      onClick={() => {
+                        setLogoPlacement(side);
+                        // Auto-switch to the matching view
+                        setSelectedImageIdx(side === "front" ? 0 : 1);
+                      }}
                       className={`px-5 py-2.5 text-sm font-mono border transition-all ${
                         logoPlacement === side
                           ? "border-primary bg-primary text-primary-foreground"
