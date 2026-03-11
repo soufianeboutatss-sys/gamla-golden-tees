@@ -16,10 +16,11 @@ interface ProductPreviewProps {
   textColor?: string;
   logoPreview: string | null;
   logoPlacement?: "front" | "back";
+  selectedSide?: "front" | "back";
   onAiImageChange?: (image: string | null) => void;
 }
 
-const ProductPreview = ({ productImage, productName, customText, textColor = "#FFFFFF", logoPreview, logoPlacement = "front", onAiImageChange }: ProductPreviewProps) => {
+const ProductPreview = ({ productImage, productName, customText, textColor = "#FFFFFF", logoPreview, logoPlacement = "front", selectedSide = "front", onAiImageChange }: ProductPreviewProps) => {
   const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [textPos, setTextPos] = useState<DraggableItem>({ x: 50, y: 50 });
@@ -104,8 +105,8 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
     }
   };
 
-  // Show logo on preview only if placement is "front"
-  const showLogoOnPreview = logoPreview && logoPlacement === "front";
+  // Show logo on preview when current view matches the placement side
+  const showLogoOnPreview = logoPreview && logoPlacement === selectedSide;
 
   return (
     <div className="relative">
@@ -164,10 +165,10 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
           </div>
         )}
 
-        {/* Back placement indicator */}
-        {!aiImage && logoPreview && logoPlacement === "back" && (
+        {/* Back placement indicator when viewing front */}
+        {!aiImage && logoPreview && logoPlacement !== selectedSide && (
           <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded text-xs font-mono text-white">
-            Logo → Verso (dos)
+            Logo → {logoPlacement === "back" ? "Verso (dos)" : "Recto (devant)"}
           </div>
         )}
       </div>
