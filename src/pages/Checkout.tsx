@@ -209,6 +209,7 @@ const Checkout = () => {
                       {idx === 0 ? t("front") : t("back")}
                     </span>
                   </button>
+                ))}
               </div>
               <p className="text-xl font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
               {/* Price with surcharge */}
