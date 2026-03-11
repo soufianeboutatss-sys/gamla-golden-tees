@@ -67,6 +67,7 @@ const Checkout = () => {
   const [logoPlacement, setLogoPlacement] = useState<"front" | "back">("front");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  // index 0 = front (recto), index 1 = back (verso)
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [aiDesignImage, setAiDesignImage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
