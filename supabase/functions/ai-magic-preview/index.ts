@@ -12,22 +12,24 @@ serve(async (req) => {
   }
 
   try {
-    const { productImageBase64, customText, textColor, logoBase64, logoPlacement, textPosition, logoPosition, productName } = await req.json();
+    const { productImageBase64, customText, textColor, textSize, logoBase64, logoPlacement, logoSize, textPosition, logoPosition, productName } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // Build the prompt
-    let instruction = `You are a professional product mockup designer. Take this ${productName} product image and integrate the following customization directly onto the fabric/material of the garment in a photorealistic way, as if it was printed/embroidered on the product. The result should look like a real product photo from an e-commerce store.`;
+    // Build the prompt with exact user-specified parameters
+    let instruction = `You are a professional product mockup designer. Take this ${productName} product image and integrate the following customization directly onto the fabric/material of the garment in a photorealistic way, as if it was printed/embroidered on the product. The result should look like a real product photo from an e-commerce store. IMPORTANT: Respect the EXACT position, size, and color specified by the customer.`;
 
     if (customText) {
-      const posDesc = textPosition ? `at approximately ${Math.round(textPosition.x)}% from left and ${Math.round(textPosition.y)}% from top` : "on the front/center";
-      instruction += ` Print this text ${posDesc} of the garment: "${customText}" in ${textColor || "white"} color.`;
+      const posDesc = textPosition ? `positioned at exactly ${Math.round(textPosition.x)}% from the left edge and ${Math.round(textPosition.y)}% from the top edge` : "centered on the front";
+      const sizeDesc = textSize ? ` The text should occupy approximately ${textSize}% of the garment width.` : "";
+      instruction += ` Print this text ${posDesc} of the garment: "${customText}" in ${textColor || "white"} color.${sizeDesc}`;
     }
     if (logoBase64) {
       const placement = logoPlacement === "back" ? "on the back" : "on the front";
-      const posDesc = logoPosition && logoPlacement === "front" ? ` at approximately ${Math.round(logoPosition.x)}% from left and ${Math.round(logoPosition.y)}% from top` : "";
-      instruction += ` Also integrate the provided logo image ${placement}${posDesc} of the garment.`;
+      const posDesc = logoPosition && logoPlacement === "front" ? ` positioned at exactly ${Math.round(logoPosition.x)}% from the left edge and ${Math.round(logoPosition.y)}% from the top edge` : "";
+      const sizeDesc = logoSize ? ` The logo should occupy approximately ${logoSize}% of the garment width.` : "";
+      instruction += ` Also integrate the provided logo image ${placement}${posDesc} of the garment.${sizeDesc}`;
     }
     instruction += ` Keep the same background, lighting, and product positioning. Make the customization look naturally part of the garment.`;
 

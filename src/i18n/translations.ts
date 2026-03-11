@@ -105,6 +105,10 @@ export const translations = {
   aiMagicGenerating: { fr: "Génération en cours...", ar: "جارٍ التوليد..." },
   aiMagicError: { fr: "Erreur lors de la génération IA", ar: "خطأ أثناء التوليد بالذكاء" },
   aiMagicHint: { fr: "Ajoutez du texte ou un logo puis cliquez sur IA Magique", ar: "أضف نصاً أو شعاراً ثم اضغط على سحر الذكاء" },
+  textSizeLabel: { fr: "Taille texte", ar: "حجم النص" },
+  logoSizeLabel: { fr: "Taille logo", ar: "حجم الشعار" },
+  dragToReposition: { fr: "Glissez pour repositionner", ar: "اسحب لإعادة التموضع" },
+  backToManual: { fr: "Revenir à l'aperçu manuel", ar: "العودة للمعاينة اليدوية" },
 
   // Footer
   copyright: { fr: "© 2026 GAMLA STAN", ar: "© 2026 GAMLA STAN" },
