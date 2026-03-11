@@ -190,20 +190,26 @@ const Checkout = () => {
                 textColor={textColor}
                 logoPreview={logoPreview}
                 logoPlacement={logoPlacement}
+                selectedSide={selectedImageIdx === 0 ? "front" : "back"}
                 onAiImageChange={setAiDesignImage}
               />
-              {/* Thumbnail gallery */}
+              {/* Thumbnail gallery: Recto / Verso */}
               <div className="flex gap-2 mt-3">
                 {selectedProduct.images.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setSelectedImageIdx(idx)}
-                    className={`w-16 h-16 border-2 overflow-hidden transition-colors ${
+                    className={`relative w-20 h-20 border-2 overflow-hidden transition-colors ${
                       idx === selectedImageIdx ? "border-primary" : "border-border hover:border-muted-foreground"
                     }`}
                   >
-                    <img src={img} alt={`${t(selectedProduct.nameKey)} vue ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={img} alt={`${t(selectedProduct.nameKey)} ${idx === 0 ? "recto" : "verso"}`} className="w-full h-full object-cover" />
+                    <span className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] font-mono text-center py-0.5">
+                      {idx === 0 ? t("front") : t("back")}
+                    </span>
+                  </button>
+                ))}
                   </button>
                 ))}
               </div>
