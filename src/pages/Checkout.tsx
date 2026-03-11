@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -29,17 +29,30 @@ import tshirt5 from "@/assets/tshirt-5.jpg";
 import tshirt5Alt from "@/assets/tshirt-5-alt.jpg";
 
 const productData = [
-  { id: "classic-hoodie", image: hoodie1, images: [hoodie1, hoodie1Alt], nameKey: "classicHoodie" as const, price: "490 MAD", category: "hoodie" },
-  { id: "urban-hoodie", image: hoodie2, images: [hoodie2, hoodie2Alt], nameKey: "urbanHoodie" as const, price: "490 MAD", category: "hoodie" },
-  { id: "forest-hoodie", image: hoodie3, images: [hoodie3, hoodie3Alt], nameKey: "forestHoodie" as const, price: "490 MAD", category: "hoodie" },
-  { id: "midnight-hoodie", image: hoodie4, images: [hoodie4, hoodie4Alt], nameKey: "midnightHoodie" as const, price: "490 MAD", category: "hoodie" },
-  { id: "sand-hoodie", image: hoodie5, images: [hoodie5, hoodie5Alt], nameKey: "sandHoodie" as const, price: "490 MAD", category: "hoodie" },
-  { id: "essential-tee", image: tshirt1, images: [tshirt1, tshirt1Alt], nameKey: "essentialTee" as const, price: "290 MAD", category: "tshirt" },
-  { id: "statement-tee", image: tshirt2, images: [tshirt2, tshirt2Alt], nameKey: "statementTee" as const, price: "290 MAD", category: "tshirt" },
-  { id: "sunset-tee", image: tshirt3, images: [tshirt3, tshirt3Alt], nameKey: "sunsetTee" as const, price: "290 MAD", category: "tshirt" },
-  { id: "burgundy-tee", image: tshirt4, images: [tshirt4, tshirt4Alt], nameKey: "burgundyTee" as const, price: "290 MAD", category: "tshirt" },
-  { id: "olive-tee", image: tshirt5, images: [tshirt5, tshirt5Alt], nameKey: "oliveTee" as const, price: "290 MAD", category: "tshirt" },
+  { id: "classic-hoodie", image: hoodie1, images: [hoodie1, hoodie1Alt], nameKey: "classicHoodie" as const, basePrice: 490, category: "hoodie" },
+  { id: "urban-hoodie", image: hoodie2, images: [hoodie2, hoodie2Alt], nameKey: "urbanHoodie" as const, basePrice: 490, category: "hoodie" },
+  { id: "forest-hoodie", image: hoodie3, images: [hoodie3, hoodie3Alt], nameKey: "forestHoodie" as const, basePrice: 490, category: "hoodie" },
+  { id: "midnight-hoodie", image: hoodie4, images: [hoodie4, hoodie4Alt], nameKey: "midnightHoodie" as const, basePrice: 490, category: "hoodie" },
+  { id: "sand-hoodie", image: hoodie5, images: [hoodie5, hoodie5Alt], nameKey: "sandHoodie" as const, basePrice: 490, category: "hoodie" },
+  { id: "essential-tee", image: tshirt1, images: [tshirt1, tshirt1Alt], nameKey: "essentialTee" as const, basePrice: 290, category: "tshirt" },
+  { id: "statement-tee", image: tshirt2, images: [tshirt2, tshirt2Alt], nameKey: "statementTee" as const, basePrice: 290, category: "tshirt" },
+  { id: "sunset-tee", image: tshirt3, images: [tshirt3, tshirt3Alt], nameKey: "sunsetTee" as const, basePrice: 290, category: "tshirt" },
+  { id: "burgundy-tee", image: tshirt4, images: [tshirt4, tshirt4Alt], nameKey: "burgundyTee" as const, basePrice: 290, category: "tshirt" },
+  { id: "olive-tee", image: tshirt5, images: [tshirt5, tshirt5Alt], nameKey: "oliveTee" as const, basePrice: 290, category: "tshirt" },
 ];
+
+const TEXT_COLORS = [
+  { value: "#FFFFFF", label: "Blanc" },
+  { value: "#000000", label: "Noir" },
+  { value: "#C62828", label: "Rouge" },
+  { value: "#1565C0", label: "Bleu" },
+  { value: "#F9A825", label: "Jaune" },
+  { value: "#2E7D32", label: "Vert" },
+  { value: "#E65100", label: "Orange" },
+  { value: "#6A1B9A", label: "Violet" },
+];
+
+const CUSTOMIZATION_SURCHARGE = 50;
 
 const Checkout = () => {
   const { t } = useLanguage();
@@ -50,12 +63,20 @@ const Checkout = () => {
   const [form, setForm] = useState({
     name: "", address: "", city: "", phone: "", size: "M", color: "terracotta", customText: "",
   });
+  const [textColor, setTextColor] = useState("#FFFFFF");
+  const [logoPlacement, setLogoPlacement] = useState<"front" | "back">("front");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [aiDesignImage, setAiDesignImage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const hasCustomization = !!(form.customText.trim() || logoFile);
+  const totalPrice = useMemo(() => {
+    if (!selectedProduct) return 0;
+    return selectedProduct.basePrice + (hasCustomization ? CUSTOMIZATION_SURCHARGE : 0);
+  }, [selectedProduct, hasCustomization]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -98,13 +119,12 @@ const Checkout = () => {
 
     setIsSubmitting(true);
     try {
-      // Convert product image to base64 so edge function can upload it
       const productImageBase64 = await imageToBase64(selectedProduct.images[selectedImageIdx]);
 
       const { error } = await supabase.functions.invoke("send-order-to-sheets", {
         body: {
           productName: t(selectedProduct.nameKey),
-          price: selectedProduct.price,
+          price: `${totalPrice} MAD`,
           size: form.size,
           color: form.color,
           customerName: form.name,
@@ -112,6 +132,8 @@ const Checkout = () => {
           address: form.address,
           city: form.city,
           customText: form.customText,
+          textColor,
+          logoPlacement,
           productImage: productImageBase64,
           aiDesignImage: aiDesignImage || null,
         },
@@ -164,7 +186,9 @@ const Checkout = () => {
                 productImage={selectedProduct.images[selectedImageIdx]}
                 productName={t(selectedProduct.nameKey)}
                 customText={form.customText}
+                textColor={textColor}
                 logoPreview={logoPreview}
+                logoPlacement={logoPlacement}
                 onAiImageChange={setAiDesignImage}
               />
               {/* Thumbnail gallery */}
@@ -183,7 +207,14 @@ const Checkout = () => {
                 ))}
               </div>
               <p className="text-xl font-mono font-bold text-foreground mt-3">{t(selectedProduct.nameKey)}</p>
-              <p className="text-xl font-mono text-muted-foreground">{selectedProduct.price}</p>
+              {/* Price with surcharge */}
+              <div className="mt-1">
+                <p className="text-lg font-mono text-muted-foreground">{selectedProduct.basePrice} MAD</p>
+                {hasCustomization && (
+                  <p className="text-sm font-mono text-gamla-orange">+ {CUSTOMIZATION_SURCHARGE} MAD ({t("customSurcharge")})</p>
+                )}
+                <p className="text-xl font-mono font-bold text-foreground mt-1">{t("totalPrice")}: {totalPrice} MAD</p>
+              </div>
             </div>
           </div>
 
@@ -194,7 +225,7 @@ const Checkout = () => {
             </div>
             <div>
               <label className={labelClass}>{t("phone")}</label>
-              <input name="phone" value={form.phone} onChange={handleChange} className={inputClass} placeholder="+33 6 00 00 00 00" maxLength={20} />
+              <input name="phone" value={form.phone} onChange={handleChange} className={inputClass} placeholder="+212 6 00 00 00 00" maxLength={20} />
             </div>
           </div>
           <div>
@@ -206,36 +237,51 @@ const Checkout = () => {
             <input name="city" value={form.city} onChange={handleChange} className={inputClass} placeholder="" maxLength={100} />
           </div>
 
-          {/* Size & Color */}
+          {/* Size */}
           <div className="border-t border-border pt-6">
             <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("options")}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>{t("size")}</label>
-                <select name="size" value={form.size} onChange={handleChange} className={inputClass}>
-                  {["XS", "S", "M", "L", "XL", "XXL"].map((s) => (<option key={s} value={s}>{s}</option>))}
-                </select>
-              </div>
-              <div style={{display:'none'}}>
-                <label className={labelClass}>{t("color")}</label>
-                <select name="color" value={form.color} onChange={handleChange} className={inputClass}>
-                  <option value="terracotta">{t("terracotta")}</option>
-                  <option value="navy">{t("navy")}</option>
-                  <option value="forest">{t("forestGreen")}</option>
-                  <option value="black">{t("black")}</option>
-                  <option value="cream">{t("cream")}</option>
-                </select>
-              </div>
+            <div>
+              <label className={labelClass}>{t("size")}</label>
+              <select name="size" value={form.size} onChange={handleChange} className={inputClass}>
+                {["XS", "S", "M", "L", "XL", "XXL"].map((s) => (<option key={s} value={s}>{s}</option>))}
+              </select>
             </div>
           </div>
 
           {/* Customization */}
           <div className="border-t border-border pt-6">
-            <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">{t("customization")}</p>
+            <p className="text-sm tracking-[0.3em] font-mono text-muted-foreground mb-4">
+              {t("customization")} <span className="text-gamla-orange text-xs">(+{CUSTOMIZATION_SURCHARGE} MAD)</span>
+            </p>
+
+            {/* Custom text */}
             <div>
               <label className={labelClass}>{t("customText")}</label>
               <textarea name="customText" value={form.customText} onChange={handleChange} className={`${inputClass} min-h-[100px] resize-y`} placeholder={t("customTextPlaceholder")} maxLength={200} />
             </div>
+
+            {/* Text color picker */}
+            {form.customText.trim() && (
+              <div className="mt-4">
+                <label className={labelClass}>{t("textColor")}</label>
+                <div className="flex flex-wrap gap-2">
+                  {TEXT_COLORS.map((c) => (
+                    <button
+                      key={c.value}
+                      type="button"
+                      onClick={() => setTextColor(c.value)}
+                      className={`w-9 h-9 rounded-full border-2 transition-all ${
+                        textColor === c.value ? "border-primary scale-110 ring-2 ring-primary/30" : "border-border hover:border-muted-foreground"
+                      }`}
+                      style={{ backgroundColor: c.value }}
+                      title={c.label}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Logo upload */}
             <div className="mt-4">
               <label className={labelClass}>{t("uploadLogo")}</label>
               <input ref={fileRef} type="file" accept=".png,.svg,.webp" onChange={handleFileChange} className="hidden" />
@@ -250,10 +296,33 @@ const Checkout = () => {
                 </button>
               )}
             </div>
+
+            {/* Logo placement: front or back */}
+            {logoPreview && (
+              <div className="mt-4">
+                <label className={labelClass}>{t("logoPlacement")}</label>
+                <div className="flex gap-3">
+                  {(["front", "back"] as const).map((side) => (
+                    <button
+                      key={side}
+                      type="button"
+                      onClick={() => setLogoPlacement(side)}
+                      className={`px-5 py-2.5 text-sm font-mono border transition-all ${
+                        logoPlacement === side
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border text-muted-foreground hover:border-primary hover:text-foreground"
+                      }`}
+                    >
+                      {t(side)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <button type="submit" disabled={isSubmitting} className="w-full py-4 text-sm tracking-[0.2em] font-mono bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60 transition-colors mt-8 flex items-center justify-center gap-2">
-            {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> {t("orderSending")}</> : t("submitOrder")}
+            {isSubmitting ? <><Loader2 size={16} className="animate-spin" /> {t("orderSending")}</> : `${t("submitOrder")} — ${totalPrice} MAD`}
           </button>
         </form>
       </section>

@@ -13,11 +13,13 @@ interface ProductPreviewProps {
   productImage: string;
   productName: string;
   customText: string;
+  textColor?: string;
   logoPreview: string | null;
+  logoPlacement?: "front" | "back";
   onAiImageChange?: (image: string | null) => void;
 }
 
-const ProductPreview = ({ productImage, productName, customText, logoPreview, onAiImageChange }: ProductPreviewProps) => {
+const ProductPreview = ({ productImage, productName, customText, textColor = "#FFFFFF", logoPreview, logoPlacement = "front", onAiImageChange }: ProductPreviewProps) => {
   const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [textPos, setTextPos] = useState<DraggableItem>({ x: 50, y: 50 });
@@ -79,7 +81,11 @@ const ProductPreview = ({ productImage, productName, customText, logoPreview, on
         body: {
           productImageBase64,
           customText: customText.trim() || null,
+          textColor,
           logoBase64: logoPreview || null,
+          logoPlacement,
+          textPosition: customText.trim() ? textPos : null,
+          logoPosition: logoPreview ? logoPos : null,
           productName,
         },
       });
@@ -98,6 +104,9 @@ const ProductPreview = ({ productImage, productName, customText, logoPreview, on
     }
   };
 
+  // Show logo on preview only if placement is "front"
+  const showLogoOnPreview = logoPreview && logoPlacement === "front";
+
   return (
     <div className="relative">
       <div
@@ -114,10 +123,10 @@ const ProductPreview = ({ productImage, productName, customText, logoPreview, on
           draggable={false}
         />
 
-        {/* Custom text overlay - hidden when AI image is shown */}
+        {/* Custom text overlay */}
         {!aiImage && customText.trim() && (
           <div
-            className={`absolute cursor-grab active:cursor-grabbing px-3 py-1.5 rounded bg-white/80 backdrop-blur-sm border border-border shadow-md ${dragging === "text" ? "ring-2 ring-primary" : ""}`}
+            className={`absolute cursor-grab active:cursor-grabbing px-3 py-1.5 rounded bg-black/30 backdrop-blur-sm border border-white/20 shadow-md ${dragging === "text" ? "ring-2 ring-primary" : ""}`}
             style={{
               left: `${textPos.x}%`,
               top: `${textPos.y}%`,
@@ -126,14 +135,17 @@ const ProductPreview = ({ productImage, productName, customText, logoPreview, on
             }}
             onPointerDown={(e) => handlePointerDown("text", e)}
           >
-            <p className="text-sm font-mono text-foreground whitespace-pre-wrap break-words leading-tight">
+            <p
+              className="text-sm font-mono whitespace-pre-wrap break-words leading-tight font-bold"
+              style={{ color: textColor }}
+            >
               {customText}
             </p>
           </div>
         )}
 
-        {/* Logo overlay - hidden when AI image is shown */}
-        {!aiImage && logoPreview && (
+        {/* Logo overlay - only shown for front placement */}
+        {!aiImage && showLogoOnPreview && (
           <div
             className={`absolute cursor-grab active:cursor-grabbing rounded bg-white/60 backdrop-blur-sm border border-border shadow-md p-1 ${dragging === "logo" ? "ring-2 ring-primary" : ""}`}
             style={{
@@ -149,6 +161,13 @@ const ProductPreview = ({ productImage, productName, customText, logoPreview, on
               className="h-20 w-20 object-contain pointer-events-none"
               draggable={false}
             />
+          </div>
+        )}
+
+        {/* Back placement indicator */}
+        {!aiImage && logoPreview && logoPlacement === "back" && (
+          <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded text-xs font-mono text-white">
+            Logo → Verso (dos)
           </div>
         )}
       </div>
