@@ -24,12 +24,15 @@ serve(async (req) => {
     const {
       productName, price, size, color,
       customerName, phone, address, city,
-      customText, productImage, aiDesignImage,
+      // Front side
+      frontCustomText, frontTextColor, frontHasLogo,
+      frontProductImage, frontAiDesignImage,
+      // Back side
+      backCustomText, backTextColor, backHasLogo,
+      backProductImage, backAiDesignImage,
     } = body;
 
     const orderId = crypto.randomUUID();
-    let productImageUrl = productImage || "";
-    let aiDesignImageUrl = "";
 
     // Helper to upload base64 image to storage
     const uploadBase64Image = async (base64: string, name: string): Promise<string> => {
@@ -54,18 +57,24 @@ serve(async (req) => {
       return urlData.publicUrl;
     };
 
-    // Upload product image
-    if (productImage && productImage.startsWith("data:")) {
-      try {
-        productImageUrl = await uploadBase64Image(productImage, "product");
-      } catch (e) { console.error("Product image upload error:", e); }
+    // Upload front images
+    let frontProductUrl = "";
+    let frontAiUrl = "";
+    if (frontProductImage && frontProductImage.startsWith("data:")) {
+      try { frontProductUrl = await uploadBase64Image(frontProductImage, "front-product"); } catch (e) { console.error("Front product upload error:", e); }
+    }
+    if (frontAiDesignImage && frontAiDesignImage.startsWith("data:")) {
+      try { frontAiUrl = await uploadBase64Image(frontAiDesignImage, "front-ai-design"); } catch (e) { console.error("Front AI upload error:", e); }
     }
 
-    // Upload AI design image
-    if (aiDesignImage && aiDesignImage.startsWith("data:")) {
-      try {
-        aiDesignImageUrl = await uploadBase64Image(aiDesignImage, "ai-design");
-      } catch (e) { console.error("AI image upload error:", e); }
+    // Upload back images
+    let backProductUrl = "";
+    let backAiUrl = "";
+    if (backProductImage && backProductImage.startsWith("data:")) {
+      try { backProductUrl = await uploadBase64Image(backProductImage, "back-product"); } catch (e) { console.error("Back product upload error:", e); }
+    }
+    if (backAiDesignImage && backAiDesignImage.startsWith("data:")) {
+      try { backAiUrl = await uploadBase64Image(backAiDesignImage, "back-ai-design"); } catch (e) { console.error("Back AI upload error:", e); }
     }
 
     // Send to Google Sheets webhook
@@ -75,9 +84,18 @@ serve(async (req) => {
       body: JSON.stringify({
         productName, price, size, color,
         customerName, phone, address, city,
-        customText,
-        productImage: productImageUrl,
-        aiDesignImage: aiDesignImageUrl,
+        // Front
+        frontCustomText: frontCustomText || "",
+        frontTextColor: frontTextColor || "",
+        frontHasLogo: frontHasLogo ? "Oui" : "Non",
+        frontProductImage: frontProductUrl,
+        frontAiDesignImage: frontAiUrl,
+        // Back
+        backCustomText: backCustomText || "",
+        backTextColor: backTextColor || "",
+        backHasLogo: backHasLogo ? "Oui" : "Non",
+        backProductImage: backProductUrl,
+        backAiDesignImage: backAiUrl,
       }),
     });
 

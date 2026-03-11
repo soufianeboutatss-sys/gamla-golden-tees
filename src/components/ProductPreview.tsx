@@ -9,27 +9,42 @@ interface DraggableItem {
   y: number;
 }
 
+export interface SideCustomization {
+  customText: string;
+  textColor: string;
+  textPos: DraggableItem;
+  textSize: number;
+  logoPreview: string | null;
+  logoPos: DraggableItem;
+  logoSize: number;
+  aiImage: string | null;
+}
+
+export const defaultSideCustomization = (): SideCustomization => ({
+  customText: "",
+  textColor: "#FFFFFF",
+  textPos: { x: 50, y: 50 },
+  textSize: 16,
+  logoPreview: null,
+  logoPos: { x: 50, y: 30 },
+  logoSize: 80,
+  aiImage: null,
+});
+
 interface ProductPreviewProps {
   productImage: string;
   productName: string;
-  customText: string;
-  textColor?: string;
-  logoPreview: string | null;
-  logoPlacement?: "front" | "back";
-  selectedSide?: "front" | "back";
-  onAiImageChange?: (image: string | null) => void;
+  side: SideCustomization;
+  onSideChange: (updates: Partial<SideCustomization>) => void;
 }
 
-const ProductPreview = ({ productImage, productName, customText, textColor = "#FFFFFF", logoPreview, logoPlacement = "front", selectedSide = "front", onAiImageChange }: ProductPreviewProps) => {
+const ProductPreview = ({ productImage, productName, side, onSideChange }: ProductPreviewProps) => {
   const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [textPos, setTextPos] = useState<DraggableItem>({ x: 50, y: 50 });
-  const [logoPos, setLogoPos] = useState<DraggableItem>({ x: 50, y: 30 });
   const [dragging, setDragging] = useState<"text" | "logo" | null>(null);
-  const [aiImage, setAiImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [textSize, setTextSize] = useState(16); // px
-  const [logoSize, setLogoSize] = useState(80); // px
+
+  const { customText, textColor, textPos, textSize, logoPreview, logoPos, logoSize, aiImage } = side;
 
   const getPercentPos = useCallback((clientX: number, clientY: number) => {
     if (!containerRef.current) return { x: 50, y: 50 };
@@ -49,26 +64,15 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragging) return;
     const pos = getPercentPos(e.clientX, e.clientY);
-    if (dragging === "text") setTextPos(pos);
-    else setLogoPos(pos);
-  }, [dragging, getPercentPos]);
+    if (dragging === "text") onSideChange({ textPos: pos });
+    else onSideChange({ logoPos: pos });
+  }, [dragging, getPercentPos, onSideChange]);
 
   const handlePointerUp = useCallback(() => {
     setDragging(null);
   }, []);
 
   const hasContent = customText.trim() || logoPreview;
-
-  const imageToBase64 = async (src: string): Promise<string> => {
-    const response = await fetch(src);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
 
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
@@ -80,16 +84,14 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
     });
   };
 
-  // Compose product + text + logo on a Canvas at exact positions, then send to AI
   const createCompositeImage = async (): Promise<string> => {
     const productImg = await loadImage(productImage);
     const canvas = document.createElement("canvas");
-    const size = 1024; // square output
+    const size = 1024;
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext("2d")!;
 
-    // Draw product image (cover fit)
     const imgRatio = productImg.width / productImg.height;
     let sx = 0, sy = 0, sw = productImg.width, sh = productImg.height;
     if (imgRatio > 1) {
@@ -101,7 +103,6 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
     }
     ctx.drawImage(productImg, sx, sy, sw, sh, 0, 0, size, size);
 
-    // Draw custom text at exact position
     if (customText.trim()) {
       const scaledFontSize = (textSize / (containerRef.current?.offsetWidth || 400)) * size;
       ctx.font = `bold ${Math.round(scaledFontSize)}px monospace`;
@@ -110,7 +111,6 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
       ctx.textBaseline = "middle";
       const tx = (textPos.x / 100) * size;
       const ty = (textPos.y / 100) * size;
-      // Handle multi-line
       const lines = customText.split("\n");
       const lineHeight = scaledFontSize * 1.2;
       const startY = ty - ((lines.length - 1) * lineHeight) / 2;
@@ -119,8 +119,7 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
       });
     }
 
-    // Draw logo at exact position
-    if (logoPreview && logoPlacement === selectedSide) {
+    if (logoPreview) {
       const logoImg = await loadImage(logoPreview);
       const scaledLogoSize = (logoSize / (containerRef.current?.offsetWidth || 400)) * size;
       const lx = (logoPos.x / 100) * size - scaledLogoSize / 2;
@@ -139,21 +138,15 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
 
     setIsGenerating(true);
     try {
-      // Create composite with exact positions using Canvas
       const compositeBase64 = await createCompositeImage();
-
       const { data, error } = await supabase.functions.invoke("ai-magic-preview", {
-        body: {
-          compositeImageBase64: compositeBase64,
-          productName,
-        },
+        body: { compositeImageBase64: compositeBase64, productName },
       });
 
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
       if (data?.image) {
-        setAiImage(data.image);
-        onAiImageChange?.(data.image);
+        onSideChange({ aiImage: data.image });
       }
     } catch (err: any) {
       console.error("AI Magic error:", err);
@@ -162,8 +155,6 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
       setIsGenerating(false);
     }
   };
-
-  const showLogoOnPreview = logoPreview && logoPlacement === selectedSide;
 
   return (
     <div className="relative">
@@ -203,7 +194,7 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
         )}
 
         {/* Logo overlay */}
-        {!aiImage && showLogoOnPreview && (
+        {!aiImage && logoPreview && (
           <div
             className={`absolute cursor-grab active:cursor-grabbing rounded bg-white/60 backdrop-blur-sm border border-border shadow-md p-1 ${dragging === "logo" ? "ring-2 ring-primary" : ""}`}
             style={{
@@ -222,56 +213,33 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
             />
           </div>
         )}
-
-        {/* Indicator when logo is on the other side */}
-        {!aiImage && logoPreview && logoPlacement !== selectedSide && (
-          <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded text-xs font-mono text-white">
-            Logo → {logoPlacement === "back" ? "Back" : "Front"}
-          </div>
-        )}
       </div>
 
       {/* Size controls */}
       {hasContent && !aiImage && (
         <div className="mt-3 space-y-2">
-          {/* Text size control */}
           {customText.trim() && (
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono text-muted-foreground w-24 shrink-0">{t("textSizeLabel")}</span>
-              <button type="button" onClick={() => setTextSize(Math.max(10, textSize - 2))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+              <button type="button" onClick={() => onSideChange({ textSize: Math.max(10, textSize - 2) })} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
                 <Minus size={12} />
               </button>
-              <input
-                type="range"
-                min={10}
-                max={40}
-                value={textSize}
-                onChange={(e) => setTextSize(Number(e.target.value))}
-                className="flex-1 accent-primary h-1"
-              />
-              <button type="button" onClick={() => setTextSize(Math.min(40, textSize + 2))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+              <input type="range" min={10} max={40} value={textSize} onChange={(e) => onSideChange({ textSize: Number(e.target.value) })} className="flex-1 accent-primary h-1" />
+              <button type="button" onClick={() => onSideChange({ textSize: Math.min(40, textSize + 2) })} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
                 <Plus size={12} />
               </button>
               <span className="text-xs font-mono text-muted-foreground w-8 text-right">{textSize}px</span>
             </div>
           )}
 
-          {/* Logo size control */}
-          {showLogoOnPreview && (
+          {logoPreview && (
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono text-muted-foreground w-24 shrink-0">{t("logoSizeLabel")}</span>
-              <button type="button" onClick={() => setLogoSize(Math.max(30, logoSize - 10))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+              <button type="button" onClick={() => onSideChange({ logoSize: Math.max(30, logoSize - 10) })} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
                 <Minus size={12} />
               </button>
-              <input
-                type="range"
-                min={30}
-                max={200}
-                value={logoSize}
-                onChange={(e) => setLogoSize(Number(e.target.value))}
-                className="flex-1 accent-primary h-1"
-              />
-              <button type="button" onClick={() => setLogoSize(Math.min(200, logoSize + 10))} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
+              <input type="range" min={30} max={200} value={logoSize} onChange={(e) => onSideChange({ logoSize: Number(e.target.value) })} className="flex-1 accent-primary h-1" />
+              <button type="button" onClick={() => onSideChange({ logoSize: Math.min(200, logoSize + 10) })} className="w-7 h-7 flex items-center justify-center border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors">
                 <Plus size={12} />
               </button>
               <span className="text-xs font-mono text-muted-foreground w-8 text-right">{logoSize}px</span>
@@ -311,7 +279,7 @@ const ProductPreview = ({ productImage, productName, customText, textColor = "#F
       {aiImage && (
         <button
           type="button"
-          onClick={() => { setAiImage(null); onAiImageChange?.(null); }}
+          onClick={() => onSideChange({ aiImage: null })}
           className="w-full mt-1 py-2 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
         >
           ← {t("backToManual")}
