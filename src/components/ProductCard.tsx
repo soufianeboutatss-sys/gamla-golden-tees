@@ -20,7 +20,7 @@ const ProductCard = ({ id, image, name, price, description, tag }: ProductCardPr
       <div className="relative">
         {/* Tag badge */}
         {tag && (
-          <span className="absolute top-3 left-3 z-10 text-[10px] tracking-[0.12em] font-mono border border-primary text-primary px-3 py-1 rounded-full bg-background">
+          <span className="absolute top-3 left-3 z-10 text-[10px] tracking-[0.12em] font-mono border border-gamla-gold text-gamla-gold px-3 py-1 rounded-full bg-background">
             {tag}
           </span>
         )}

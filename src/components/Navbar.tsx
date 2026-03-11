@@ -14,7 +14,7 @@ const Navbar = () => {
   return (
     <>
       {/* Announcement bar */}
-      <div className="bg-primary text-primary-foreground text-center py-2.5">
+      <div className="bg-gamla-red text-white text-center py-2.5">
         <p className="text-[10px] tracking-[0.2em] font-mono uppercase">
           {t("announcement")}
         </p>

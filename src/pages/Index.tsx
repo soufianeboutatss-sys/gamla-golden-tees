@@ -31,7 +31,7 @@ const Index = () => {
               <br />
               {t("heroTitle2")}<span className="italic">{t("heroTitle2Italic")}</span>
             </h1>
-            <Link to="/hoodies" className="inline-block mt-8 px-8 py-3 text-[11px] tracking-[0.15em] font-mono bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+            <Link to="/hoodies" className="inline-block mt-8 px-8 py-3 text-[11px] tracking-[0.15em] font-mono bg-gamla-orange text-white rounded-md hover:bg-gamla-orange/90 transition-colors">
               {t("shopNow")}
             </Link>
           </motion.div>
@@ -70,7 +70,7 @@ const Index = () => {
           {t("ctaTitle")}<span className="italic">{t("ctaTitleItalic")}</span>
         </h2>
         <p className="text-xs font-mono text-muted-foreground max-w-md mx-auto leading-relaxed mb-10">{t("ctaDesc")}</p>
-        <Link to="/checkout" className="inline-block px-10 py-3.5 text-[11px] tracking-[0.15em] font-mono bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+        <Link to="/checkout" className="inline-block px-10 py-3.5 text-[11px] tracking-[0.15em] font-mono bg-gamla-red text-white rounded-md hover:bg-gamla-red/90 transition-colors">
           {t("startOrder")}
         </Link>
       </section>
