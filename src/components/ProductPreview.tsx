@@ -16,6 +16,7 @@ interface ProductPreviewProps {
   textColor?: string;
   logoPreview: string | null;
   logoPlacement?: "front" | "back";
+  selectedSide?: "front" | "back";
   onAiImageChange?: (image: string | null) => void;
 }
 
