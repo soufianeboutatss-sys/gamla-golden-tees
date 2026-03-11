@@ -109,6 +109,7 @@ export const translations = {
   logoSizeLabel: { fr: "Taille logo", ar: "حجم الشعار" },
   dragToReposition: { fr: "Glissez pour repositionner", ar: "اسحب لإعادة التموضع" },
   backToManual: { fr: "Revenir à l'aperçu manuel", ar: "العودة للمعاينة اليدوية" },
+  customizeBothSides: { fr: "Personnalisez le devant et/ou le dos de votre vêtement.", ar: "خصّص الأمام و/أو الخلف لملابسك." },
 
   // Footer
   copyright: { fr: "© 2026 GAMLA STAN", ar: "© 2026 GAMLA STAN" },
